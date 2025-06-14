@@ -1,9 +1,10 @@
+//  -----------------------FIREBASE SETUP---------------------------
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Your web app's Firebase configuration
+// web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBKdMXNf5SIpKY-JGZ7cAOipJ8SYq5MaVU",
   authDomain: "fir-auth-c133c.firebaseapp.com",
@@ -27,7 +28,7 @@ try {
       persistence: getReactNativePersistence(AsyncStorage)
     });
   } else {
-    throw error; // Rethrow other errors
+    throw error;
   }
 }
 

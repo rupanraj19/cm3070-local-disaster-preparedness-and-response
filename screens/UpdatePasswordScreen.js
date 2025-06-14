@@ -1,3 +1,4 @@
+// ----------------UPDATE PASSWORD-------------------------
 import React, {useState} from "react";
 import {View, Text, Button, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import { updatePassword, signOut } from 'firebase/auth';

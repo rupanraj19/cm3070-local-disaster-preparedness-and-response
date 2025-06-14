@@ -1,22 +1,25 @@
+// -----------------MAIN STACK-------------------------
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import AuthStack from '../navigation/AuthStack';
-import Tabs from '../navigation/tabs';
-import { onAuthStateChanged } from 'firebase/auth';
+import AuthStack from '../navigation/AuthStack'; // Stack for unauthenticated users (login, register, etc.)
+import Tabs from '../navigation/tabs'; // Bottom tab navigation for authenticated users
+import { onAuthStateChanged } from 'firebase/auth'; // Listener for auth state changes
 import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default function MainStack() {
   const [user, setUser] = useState(null);
   const [isNewUser, setIsNewUser] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Control render while checking auth state
 
+  // Listen for auth state changes (login/logout)
   useEffect(() => {
     console.log('Setting up onAuthStateChanged listener');
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log('Auth state changed:', user ? { uid: user.uid, email: user.email } : 'No user');
       if (user) {
         try {
+          // Fetch user document from Firestore
           console.log('Fetching user document for UID:', user.uid);
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
@@ -25,7 +28,7 @@ export default function MainStack() {
             if (userData.isNewUser) {
               console.log('New user detected, updating isNewUser and staying in AuthStack');
               await updateDoc(doc(db, 'users', user.uid), { isNewUser: false });
-              setIsNewUser(true);
+              setIsNewUser(true); // Still considered new in local state, stay in AuthStack
               setUser(null);
             } else {
               console.log('Existing user, setting user state for Tabs');

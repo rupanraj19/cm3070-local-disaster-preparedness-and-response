@@ -1,3 +1,4 @@
+// ------------LOGIN SCREEN-----------------
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -9,9 +10,10 @@ import { serverTimestamp, signInWithCredential, GoogleAuthProvider } from 'fireb
 import { SocialIcon } from 'react-native-elements'
 
 
-WebBrowser.maybeCompleteAuthSession();
+WebBrowser.maybeCompleteAuthSession(); // Ensures that any open AuthSession is properly completed
 
 const LoginScreen = ({ navigation }) => {
+  // States to store user input
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -21,6 +23,7 @@ const LoginScreen = ({ navigation }) => {
     tokenEndpoint: 'https://oauth2.googleapis.com/token',
   };
 
+  // Create redirect URI for Expo Go / standalone apps
   const redirectUri = AuthSession.makeRedirectUri({
     useProxy: true, // For Expo Go
     scheme: 'floodsafe_sg', // For standalone builds
@@ -29,6 +32,7 @@ const LoginScreen = ({ navigation }) => {
   console.log('Generated redirectUri:', redirectUri);
   console.log(AuthSession.makeRedirectUri({ useProxy: true }));
 
+  // Google Auth Request using Expo AuthSession
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       webClientId: '892330515524-iuaddi1ppekpla04qi6cilvrshp38oa0.apps.googleusercontent.com', // From Firebase Console
@@ -38,6 +42,7 @@ const LoginScreen = ({ navigation }) => {
     discovery
   );
 
+  // Listen for Google Sign-In response
   React.useEffect(() => {
     if (response) {
       console.log('AuthSession response:', response);
@@ -50,6 +55,7 @@ const LoginScreen = ({ navigation }) => {
     }
   }, [response]);
 
+  // Allow user to sign in with username instead of email
   const handleLogin = async () => {
     if (!emailOrUsername || !password) {
       alert('Please fill all fields');
@@ -78,6 +84,7 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
+  // Handle login using Google Sign-In
   const handleGoogleSignIn = async (idToken) => {
     try {
       console.log('Processing Google Sign-In with idToken');
@@ -207,16 +214,7 @@ const LoginScreen = ({ navigation }) => {
             type='google'
             />
           </TouchableOpacity>
-
-          {/* <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
-            style={[styles.btn, styles.btnOutline]}
-          >
-            <Text style={styles.btnOutlineText}>Go to Register</Text>
-          </TouchableOpacity> */}
         </View>
-
-
       </KeyboardAvoidingView>
     </ImageBackground>
   );
@@ -224,6 +222,7 @@ const LoginScreen = ({ navigation }) => {
 
 export default LoginScreen;
 
+// ----------STYLES----------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
