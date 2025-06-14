@@ -1,4 +1,4 @@
-// App.js
+//-----------APP.JS---------------
 import React from 'react';
 import MainStack from './navigation/MainStack';
 
