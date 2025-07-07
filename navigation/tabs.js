@@ -8,14 +8,14 @@ import HomeScreen from '../screens/HomeScreen'
 import AlertScreen from '../screens/AlertScreen';
 import SosScreen from '../screens/SosScreen';
 import ProfileStack from '../navigation/ProfileStack';
-import ContactScreen from '../screens/ContactScreen';
+import ContactStack from '../navigation/ContactStack';
 
 
 const Tab = createBottomTabNavigator();
 const CustomTabBarButton =({children, onPress}) => (
     <TouchableOpacity
     style={{
-        top: -30,
+        top: -15,
         justifyContent: 'center',
         alignItems: 'center',
          ...styles.shadow
@@ -124,8 +124,9 @@ const Tabs =()=>{
                     ),
                 }}
             />
-            <Tab.Screen name="Contact" component={ContactScreen}
+            <Tab.Screen name="Contact" component={ContactStack}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({color}) => (
                         <View style={{alignItems: 'center', justifyContent:'center'}}>
                             <Image
