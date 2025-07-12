@@ -32,7 +32,7 @@ const handleSignUp = async () => {
 
     console.log('Attempting to save user data to Firestore...');
     await setDoc(doc(db, 'users', user.uid), {
-      username,
+      name: username,
       email: user.email,
       createdAt: serverTimestamp(),
       isNewUser: true,

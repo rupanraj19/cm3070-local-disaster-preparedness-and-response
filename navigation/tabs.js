@@ -124,7 +124,7 @@ const Tabs =()=>{
                     ),
                 }}
             />
-            <Tab.Screen name="Contact" component={ContactStack}
+            <Tab.Screen name="ContactStack" component={ContactStack}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({color}) => (
