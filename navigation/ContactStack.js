@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+//--------------CONTACT STACK-------------------------
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import ContactScreen from '../screens/ContactScreen';
@@ -6,7 +6,7 @@ import FeedbackScreen from '../screens/FeedbackScreen';
 
 const Stack = createNativeStackNavigator();
 
-const ContactStack = () => {
+export default function ContactStack() {
   return (
      <Stack.Navigator>
       <Stack.Screen name="Contact" component={ContactScreen} />
@@ -15,5 +15,5 @@ const ContactStack = () => {
   )
 }
 
-export default ContactStack
+
 

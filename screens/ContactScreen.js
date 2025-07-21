@@ -1,6 +1,6 @@
 // --------------CONTACT SCREEN--------------------
 import React from "react";
-import {View, Text, Button, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, Button, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import {Table, Row, Rows} from 'react-native-table-component'
 
 
@@ -15,10 +15,10 @@ const tableData = [
 
 const ContactScreen = ({navigation}) => {
     return (
-        <ScrollView style={styles.container}>
-            <View>
-            {/* <Text>Contact Screen</Text> */}
-            {/* <Text>Hello preethi, im doing this for u</Text> */}
+        <SafeAreaView>
+        <ScrollView style={styles.container} >
+            <View >
+
 
             {/* about us */}
             <View style={[styles.sectionBox,styles.aboutusContainer]}>
@@ -50,6 +50,8 @@ const ContactScreen = ({navigation}) => {
             </View>
         </View>
         </ScrollView>
+        </SafeAreaView>
+
 
     );
 }
@@ -58,8 +60,9 @@ export default ContactScreen;
 
 const styles =  StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor:'#5EABD6'
+        // flex: 1,
+        backgroundColor:'#5EABD6',
+        paddingBottom: 100,
     },
     aboutusContainer: {
         // marginVertical: 20

@@ -5,10 +5,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // import screen
 import HomeScreen from '../screens/HomeScreen'
-import AlertScreen from '../screens/AlertScreen';
 import SosScreen from '../screens/SosScreen';
-import ProfileStack from '../navigation/ProfileStack';
-import ContactStack from '../navigation/ContactStack';
+import ProfileStack from './ProfileStack';
+import ContactStack from './ContactStack';
+import AlertStack from './AlertStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -70,8 +70,9 @@ const Tabs =()=>{
                     ),
                 }}
             />
-            <Tab.Screen name="Alert" component={AlertScreen}
+            <Tab.Screen name="AlertStack" component={AlertStack}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                     <Image
                         source={require('../assets/icons/alert.png')}
@@ -88,6 +89,7 @@ const Tabs =()=>{
             />
             <Tab.Screen name="SOS" component={SosScreen}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({focused})=>(
                         <Image
                         source={require('../assets/icons/sos.png')}
