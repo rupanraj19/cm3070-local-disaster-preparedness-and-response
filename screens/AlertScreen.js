@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Switch, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { OPENWEATHER_API_KEY } from '@env';
+
 
 const STATIC_STATIONS = [
   { id: 'S224', name: 'Airport Boulevard', latitude: 1.34392, longitude: 103.98409 },
@@ -142,7 +142,8 @@ const AlertsScreen = ({ navigation }) => {
   const fetchWeatherData = async (latitude, longitude) => {
     try {
       setWeatherLoading(true);
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${OPENWEATHER_API_KEY}`;
+      const apiKey = '41cc19554efb3d7751df67f9bd90f730';
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();

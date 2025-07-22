@@ -90,7 +90,7 @@ export default function MainStack() {
 
   if (loading) {
     console.log('Showing loading state');
-    return null;
+    return null; // Replace with splash screen if needed
   }
 
   return (

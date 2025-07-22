@@ -1,94 +1,55 @@
-// ----------------FORGOT PASSWORD--------------------
-import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { sendPasswordResetEmail } from 'firebase/auth';
+// ---------------------PROFILE SCREEN------------------------
+import {View, Text, Button, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 
-const ForgotPasswordScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
+const ProfileScreen = ({navigation}) => {
+  // handleSignout function
+    const handleSignOut = () => {
+        signOut(auth).catch(error => {
+        alert("Failed to sign out: " + error.message);
+        });
+    };
 
-  const handlePasswordReset = () => {
-    if (!email) {
-      Alert.alert('Please enter your email.');
-      return;
-    }
 
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-        Alert.alert('Password reset email sent!', 'Please check your inbox.');
-        navigation.goBack(); // or navigate to login screen
-      })
-      .catch((error) => {
-        if (error.code === 'auth/user-not-found') {
-            Alert.alert("Error", "No account found with that email.");
-        } else {
-            Alert.alert("Error", error.message);
-        }
-      });
-  };
+    return (
+        <View style={styles.container}>
+            <Text>Profile Screen</Text>
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Reset Your Password</Text>
-      <TextInput
-        placeholder="Enter your email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TouchableOpacity onPress={handlePasswordReset} style={styles.button}>
-        <Text style={styles.buttonText}>Send Reset Email</Text>
-      </TouchableOpacity>
+            {/* Sign Out Button */}
+            <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+                <Text style={styles.signOutText}>Sign Out</Text>
+            </TouchableOpacity>
+              {/*UpdatePassword Button  */}
+              <TouchableOpacity onPress={() => navigation.navigate('UpdatePassword') }>
+                <Text style={{ color: 'black', textAlign: 'center' }}>Update Password</Text>
+              </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.link}>
-        <Text style={styles.linkText}>Back to Login</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+        </View>
+    );
+}
 
-export default ForgotPasswordScreen;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
+    alignItems: 'center'
   },
   title: {
     fontSize: 24,
-    marginBottom: 24,
-    fontWeight: 'bold',
+    marginBottom: 40
   },
-  input: {
-    width: '100%',
-    backgroundColor: '#f2f2f2',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  button: {
-    backgroundColor: '#0782f9',
-    padding: 15,
+  signOutButton: {
+    backgroundColor: '#ff3b30',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
     borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 10,
   },
-  buttonText: {
+  signOutText: {
     color: '#fff',
-    fontWeight: '700',
     fontSize: 16,
-  },
-  link: {
-    marginTop: 10,
-  },
-  linkText: {
-    color: '#0782f9',
-    fontSize: 14,
-  },
+    fontWeight: 'bold'
+  }
 });
