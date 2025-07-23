@@ -4,11 +4,12 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // import screen
-import HomeScreen from '../screens/HomeScreen'
+// import HomeScreen from '../screens/HomeScreen'
 import SosScreen from '../screens/SosScreen';
 import ProfileStack from './ProfileStack';
 import ContactStack from './ContactStack';
 import AlertStack from './AlertStack';
+import HomeStack from './HomeStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -55,7 +56,8 @@ const Tabs =()=>{
             },
         }}
         >
-            <Tab.Screen name="Home" component={HomeScreen}   options={{
+            <Tab.Screen name="HomeStack" component={HomeStack}   options={{
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                     <Image
                         source={require('../assets/icons/home.png')}

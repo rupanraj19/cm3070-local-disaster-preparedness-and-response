@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { UserContext } from "../context/UserContext"; // adjust path
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const { userData } = useContext(UserContext);
   const name = userData?.name || "User";
   const streak = userData?.streak ?? 0;
@@ -11,6 +11,9 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Welcome, {name}!</Text>
       <Text style={styles.streak}>🔥 Streak: {streak}</Text>
+      <Pressable onPress={()=> navigation.navigate('Splash')}>
+          <Text>Game 1</Text>
+      </Pressable>
     </View>
   );
 };

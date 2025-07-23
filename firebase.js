@@ -34,6 +34,6 @@ try {
 
 const db = getFirestore(app);
 
-console.log('Firestore initialized:', db);
+// console.log('Firestore initialized:', db);
 
 export { auth, db };
