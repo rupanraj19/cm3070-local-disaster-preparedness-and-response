@@ -1,21 +1,30 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React, {useState} from 'react'
+import {useRoute} from "@react-navigation/native"
 import { SafeAreaView } from 'react-native-safe-area-context'
-import {reactQuestions} from '../config/question'
+import { quizzes } from '../config/question'
 import tw from "twrnc"
 import * as Progress from "react-native-progress"
+
 const Questions = ({navigation}) => {
+
+  const route = useRoute();
+  // const navigation = useNavigation();
+  const { quizType } = route.params;
+
+  const quizQuestions = quizzes[quizType];
+
   const[currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0)
   const [selectedOption, setSelectedOption] = useState(null)
   const [isCorrect, setIsCorrect] = useState(null)
-  const [quizProgress, setQuizProgress] = useState(reactQuestions.length);
+  const [quizProgress, setQuizProgress] = useState(quizQuestions.length);
 
   const progress = (currentQuestionIndex + 1)/ quizProgress;
 
   // handle next press
   const handleNext=()=>{
-    if(currentQuestionIndex === reactQuestions.length-1){
+    if(currentQuestionIndex === quizQuestions.length-1){
       navigation.navigate("Score", {score: score})
     }
     else{
@@ -32,7 +41,7 @@ const Questions = ({navigation}) => {
     setSelectedOption(pressedOption);
 
     const isAnswerCorrect =
-    reactQuestions[currentQuestionIndex].correctAnswer === pressedOption;
+    quizQuestions[currentQuestionIndex].correctAnswer === pressedOption;
     setIsCorrect(isAnswerCorrect)
 
     if(isAnswerCorrect){
@@ -43,13 +52,13 @@ const Questions = ({navigation}) => {
   return (
     <View style={tw`mt-6 p-4`}>
       <View style={tw`flex-row`}>
-        <View style={tw`flex-1`}>
+        <View style={tw`flex-1 mb-4`}>
           <Progress.Bar progress={progress} width={null} height={20} color={"rgba(25, 106, 247, 1)"} />
         </View>
       </View>
-      <Text style={tw`text-2xl mb-4`}>{reactQuestions[currentQuestionIndex].question}</Text>
+      <Text style={tw`text-2xl mb-4`}>{quizQuestions[currentQuestionIndex].question}</Text>
         {
-            reactQuestions[currentQuestionIndex].options.map(option=>(
+            quizQuestions[currentQuestionIndex].options.map(option=>(
               <Pressable
               key={option}
               style={tw`border-2 border-blue-500 p-4 rounded-md p-4 my-2 rounded-md ${
@@ -64,7 +73,7 @@ const Questions = ({navigation}) => {
         }
 
       <Pressable style={tw`bg-blue-500 p-2 rounded-md mt-6`} onPress={handleNext}>
-        <Text style={tw`text-white text-lg text-center font-bold`}>{currentQuestionIndex === reactQuestions.length-1 ? "Finish" : "Next"}</Text>
+        <Text style={tw`text-white text-lg text-center font-bold`}>{currentQuestionIndex === quizQuestions.length-1 ? "Finish" : "Next"}</Text>
       </Pressable>
 
     </View>

@@ -12,7 +12,10 @@ const HomeScreen = ({navigation}) => {
       <Text style={styles.title}>Welcome, {name}!</Text>
       <Text style={styles.streak}>🔥 Streak: {streak}</Text>
       <Pressable onPress={()=> navigation.navigate('Splash')}>
-          <Text>Game 1</Text>
+          <Text>Quiz</Text>
+      </Pressable>
+      <Pressable onPress={()=> navigation.navigate('PackBagGame')}>
+          <Text>Pack the Emergency Kit bag</Text>
       </Pressable>
     </View>
   );

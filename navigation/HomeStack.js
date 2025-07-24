@@ -5,7 +5,8 @@ import Splash from '../screens/Splash';
 import Questions from "../screens/Questions"
 import Score from '../screens/Score';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import PackBagGame from '../screens/packBagGame';
+import PbgResult from '../screens/pbgResult'
 
 const Stack = createNativeStackNavigator();
 const HomeStack = () => {
@@ -17,6 +18,8 @@ const HomeStack = () => {
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Question" component={Questions} />
         <Stack.Screen name="Score" component={Score} />
+        <Stack.Screen name="PackBagGame" component={PackBagGame} />
+        <Stack.Screen name="PbgResult" component={PbgResult} />
       </Stack.Navigator>
 
   )

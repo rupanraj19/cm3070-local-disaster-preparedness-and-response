@@ -4,11 +4,12 @@ import { useRoute } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import tw from 'twrnc';
 
-const Score = ({ navigation }) => {
-  const route = useRoute();
-  const { score } = route.params;
 
-  const [filledStars, setFilledStars] = useState(0);
+const PbgResult = () => {
+      const route = useRoute()
+      const {score} = route.params;
+
+      const [filledStars, setFilledStars] = useState(0);
 
   // Decide number of stars
   const calculateStars = () => {
@@ -36,10 +37,9 @@ const Score = ({ navigation }) => {
     }
     return () => timeoutIds.forEach(clearTimeout);
   }, []);
-
   return (
     <View style={tw`flex-1 items-center bg-white`}>
-      <Animatable.Image
+       <Animatable.Image
         animation="fadeIn"
         duration={800}
         delay={100}
@@ -73,15 +73,9 @@ const Score = ({ navigation }) => {
           );
         })}
       </View>
-
-      <Pressable
-        style={tw`bg-blue-500 mt-20 px-5 py-2 rounded-md`}
-        onPress={() => navigation.navigate('Splash')}
-      >
-        <Text style={tw`text-white text-base text-xl`}>Play Again</Text>
-      </Pressable>
     </View>
-  );
-};
+  )
+}
 
-export default Score;
+export default PbgResult
+
