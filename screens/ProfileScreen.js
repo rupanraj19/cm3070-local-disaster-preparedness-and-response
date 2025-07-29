@@ -1,29 +1,15 @@
 // ---------------------PROFILE SCREEN------------------------
 import {View, Text, Button, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
 
 const ProfileScreen = ({navigation}) => {
-  // handleSignout function
-    const handleSignOut = () => {
-        signOut(auth).catch(error => {
-        alert("Failed to sign out: " + error.message);
-        });
-    };
 
 
     return (
         <View style={styles.container}>
             <Text>Profile Screen</Text>
-
-            {/* Sign Out Button */}
-            <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
-                <Text style={styles.signOutText}>Sign Out</Text>
+            <TouchableOpacity onPress={()=>navigation.navigate('Settings')}>
+              <Text>Settings</Text>
             </TouchableOpacity>
-              {/*UpdatePassword Button  */}
-              <TouchableOpacity onPress={() => navigation.navigate('UpdatePassword') }>
-                <Text style={{ color: 'black', textAlign: 'center' }}>Update Password</Text>
-              </TouchableOpacity>
 
         </View>
     );

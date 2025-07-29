@@ -1,11 +1,14 @@
 import React from 'react';
 import MainStack from './navigation/MainStack';
-import { UserProvider } from './context/UserContext'; // adjust path
+import { UserProvider } from './context/UserContext'; // usercontext
+import { ThemeProvider } from './context/ThemeContext'; // themecontext
 
 export default function App() {
   return (
     <UserProvider>
-      <MainStack />
+      <ThemeProvider>
+        <MainStack />
+      </ThemeProvider>
     </UserProvider>
   );
 }
