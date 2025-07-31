@@ -40,7 +40,8 @@
     "react-native-screens": "^4.11.1",
     "react-native-table-component": "^1.2.2",
     "react-native-tableview-simple": "^4.4.1",
-    "twrnc": "^4.9.1"
+    "twrnc": "^4.9.1",
+    "expo-notifications": "~0.31.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -53,33 +53,16 @@ const SettingsScreen = ({ navigation }) => {
 
       <ScrollView style={tw`px-0`}>
         {/* Section Title */}
-        <Text style={tw`text-sm text-gray-500 px-4 mt-2 mb-1`}>Account</Text>
+        <Text style={tw`text-sm text-gray-500 px-4 mt-4 mb-1`}>Account</Text>
 
         {/* Account Settings */}
         <View style={tw`bg-gray-100`}>
-          <SettingsCell title="Preferences" onPress={() => {}} textColor={textColor} bgColor={bgColor}  />
-          {/* <SettingsCell title="Profile" onPress={() => {}} /> */}
+
           <SettingsCell title="Theme" detail={isDark ? 'Dark' : 'Light'} onPress={toggleTheme} textColor={textColor} bgColor={bgColor}  />
-          <SettingsCell title="Notifications" onPress={() => {}} textColor={textColor} bgColor={bgColor}  />
-          <SettingsCell title="Privacy settings" onPress={() => {}} textColor={textColor} bgColor={bgColor}  />
-        </View>
-
-        {/* Divider */}
-        <View style={tw`h-px bg-black my-4 mx-4`} />
-
-        {/* Legal */}
-        <Text style={tw`text-sm text-gray-500 px-4 mb-1`}>Legal</Text>
-        <View style={tw`bg-gray-100`}>
-          <SettingsCell title="Terms" onPress={() => {}} textColor={textColor} bgColor={bgColor}  />
-          <SettingsCell title="Privacy Policy" onPress={() => {}} textColor={textColor} bgColor={bgColor}  />
-          <SettingsCell title="Acknowledgements" onPress={() => {}} textColor={textColor} bgColor={bgColor}  />
-        </View>
-
-        {/* Divider */}
-        <View style={tw`h-px bg-black my-4 mx-4`} />
+          <SettingsCell title="Notifications" onPress={() => navigation.navigate('Notification')} textColor={textColor} bgColor={bgColor}  />
 
         {/* Actions */}
-        <View style={tw`px-4 pb-10`}>
+        <View style={tw`px-4 p-10 ${bgColor}`}>
           <TouchableOpacity
             onPress={handleSignOut}
             style={tw`bg-red-500 rounded px-4 py-3 mb-4`}
@@ -88,12 +71,29 @@ const SettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate("UpdatePassword")}
-            style={tw`bg-blue-500 rounded px-4 py-3 mb-30`}>
+            style={tw`bg-blue-500 rounded px-4 py-3`}>
             <Text style={tw`text-white text-center text-base font-medium`}>
               Update Password
             </Text>
           </TouchableOpacity>
         </View>
+        </View>
+
+        {/* Divider */}
+        <View style={tw`h-px bg-black my-4 mx-4`} />
+
+        {/* Legal */}
+        <Text style={tw`text-sm text-gray-500 px-4 mb-1`}>Legal</Text>
+        <View style={tw`bg-gray-100`}>
+          <SettingsCell title="Terms" onPress={() => navigation.navigate('Terms')} textColor={textColor} bgColor={bgColor}  />
+          <SettingsCell title="Privacy Policy" onPress={() => navigation.navigate('Policy')} textColor={textColor} bgColor={bgColor}  />
+          <SettingsCell title="Acknowledgements" onPress={() => navigation.navigate('Acknowledgement')} textColor={textColor} bgColor={bgColor}  />
+        </View>
+
+        {/* Divider */}
+        <View style={tw`h-px bg-black my-4 mx-4`} />
+
+
       </ScrollView>
     </View>
   );

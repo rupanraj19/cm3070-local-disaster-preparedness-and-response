@@ -70,7 +70,7 @@ const AlertsScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [heavyRain, setHeavyRain] = useState(false);
   const [rainStations, setRainStations] = useState([]);
-  const [showStations, setShowStations] = useState(true);
+  const [showStations, setShowStations] = useState(false);
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);

@@ -61,7 +61,7 @@ export default ContactScreen;
 const styles =  StyleSheet.create({
     container: {
         // flex: 1,
-        backgroundColor:'#5EABD6',
+        backgroundColor:'white',
         paddingBottom: 100,
     },
     aboutusContainer: {
