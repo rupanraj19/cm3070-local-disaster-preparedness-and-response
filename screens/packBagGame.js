@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import React, { useState } from 'react';
 import tw from 'twrnc';
+import { getFirestore, doc, updateDoc, increment, setDoc, getDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import * as Animatable from 'react-native-animatable';
 
 
@@ -36,14 +38,64 @@ const PackBagGame = ({ navigation }) => {
   }
 };
 
+const updateLeaderboard = async (username, points) => {
+  const db = getFirestore();
+  const auth = getAuth();
+  const user = auth.currentUser;
 
-  const handleSubmit = () => {
-    const correctCount = selectedItems.filter((name) =>
-      emergencyItems.find((item) => item.name === name && item.isCorrect)
-    );
-    setScore(correctCount.length * 10);
-    navigation.navigate('PbgResult', { score: correctCount.length * 10 });
-  };
+  if (!user) return;
+
+  try {
+    await setDoc(doc(db, "leaderboard", user.uid), {
+      name: username,
+      points: points,
+      // Optionally add streak here if you have it
+    });
+    console.log("Leaderboard updated");
+  } catch (err) {
+    console.error("Failed to update leaderboard", err);
+  }
+};
+
+const handleSubmit = async () => {
+  const correctCount = selectedItems.filter((name) =>
+    emergencyItems.find((item) => item.name === name && item.isCorrect)
+  );
+
+  const totalScore = correctCount.length * 10;
+  setScore(totalScore);
+
+  const db = getFirestore();
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userId = user?.uid;
+
+  if (userId) {
+    const userRef = doc(db, 'users', userId);
+
+    try {
+      // First, increment points in user document
+      await updateDoc(userRef, {
+        points: increment(totalScore),
+      });
+      console.log(`${totalScore} points added`);
+
+      // Now, get the latest user data (name + points)
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+      const username = userData.username || 'Unknown';
+      const updatedPoints = (userData.points || 0) + totalScore;
+
+      // Update leaderboard with latest info
+      await updateLeaderboard(username, updatedPoints);
+    } catch (err) {
+      console.error('Error updating Firestore:', err);
+    }
+  }
+
+  navigation.navigate('PbgResult', { score: totalScore });
+};
+
 
   return (
     <View style={tw`p-4 mt-2`}>

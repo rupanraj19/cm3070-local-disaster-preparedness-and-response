@@ -3,6 +3,8 @@ import React, {useState} from 'react'
 import {useRoute} from "@react-navigation/native"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { quizzes } from '../config/question'
+import { getFirestore, doc, updateDoc, increment } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import tw from "twrnc"
 import * as Progress from "react-native-progress"
 
@@ -25,7 +27,24 @@ const Questions = ({navigation}) => {
   // handle next press
   const handleNext=()=>{
     if(currentQuestionIndex === quizQuestions.length-1){
-      navigation.navigate("Score", {score: score})
+          const db = getFirestore();
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+
+    if (userId) {
+      const userRef = doc(db, 'users', userId);
+      updateDoc(userRef, {
+        points: increment(score),
+      })
+      .then(() => {
+        console.log(`${score} points added to Firestore`);
+      })
+      .catch((err) => {
+        console.error('Error updating points:', err);
+      });
+    }
+
+    navigation.navigate("Score", {score: score})
     }
     else{
       setCurrentQuestionIndex(currentQuestionIndex+1)
