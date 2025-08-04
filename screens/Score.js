@@ -4,11 +4,21 @@ import { useRoute } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import tw from 'twrnc';
 
+const badgeImages ={
+  floodsafety: require('../assets/images/bagbadge.png'),
+  floodawareness: require('../assets/images/bagbadge.png')
+
+}
+
 const Score = ({ navigation }) => {
   const route = useRoute();
-  const { score } = route.params;
+  const { score, quizType: rawQuizType } = route.params;
+  const quizType = rawQuizType?.toLowerCase().replace(/\s+/g, '');
+
+
 
   const [filledStars, setFilledStars] = useState(0);
+  const [showBadge, setShowBadge] = useState(false);
 
   // Decide number of stars
   const calculateStars = () => {
@@ -34,8 +44,17 @@ const Score = ({ navigation }) => {
         setTimeout(() => setFilledStars(i), i * 500) // 500ms gap
       );
     }
+
+    // Show badge after stars if full score
+    if (score === 50) {
+      timeoutIds.push(setTimeout(() => setShowBadge(true), 1800));
+    }
+
     return () => timeoutIds.forEach(clearTimeout);
   }, []);
+  console.log("QUIZ TYPE:", quizType);
+  console.log("BADGE IMAGE EXISTS:", !!badgeImages[quizType]);
+
 
   return (
     <View style={tw`flex-1 items-center bg-white`}>
@@ -73,6 +92,21 @@ const Score = ({ navigation }) => {
           );
         })}
       </View>
+
+       {/* Badge Animation */}
+     {showBadge && badgeImages[quizType] && (
+  <Animatable.View animation="bounceIn" delay={200} style={tw`items-center mt-6`}>
+    <Image
+      source={badgeImages[quizType]}
+      style={tw`w-24 h-24 mb-2`}
+      resizeMode="contain"
+    />
+    <Text style={tw`text-base font-semibold text-blue-500`}>
+      {rawQuizType} Quiz Master Badge Unlocked!
+    </Text>
+  </Animatable.View>
+)}
+
 
       <Pressable
         style={tw`bg-blue-500 mt-20 px-5 py-2 rounded-md`}

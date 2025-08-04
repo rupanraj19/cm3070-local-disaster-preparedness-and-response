@@ -1,7 +1,15 @@
-import React, { useContext, useState } from "react";
-import { View, Text, Pressable, FlatList, TouchableOpacity, Image, ScrollView } from "react-native";
+import React, { useContext } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import { UserContext } from "../context/UserContext";
 import { guides } from "../config/guides";
+import { games } from "../config/games"; // Add this file like we discussed
 import tw from "twrnc";
 
 const HomeScreen = ({ navigation }) => {
@@ -9,54 +17,78 @@ const HomeScreen = ({ navigation }) => {
   const name = userData?.name || "User";
   const streak = userData?.streak ?? 0;
 
-  const [completedGuideId, setCompletedGuideId] = useState([]);
-
   return (
-    <ScrollView contentContainerStyle={tw`px-5 pt-10 bg-blue-200`}>
-      {/*welcome + streak  */}
-      <View style={tw`items-center`}>
-        <Text style={tw`text-2xl font-bold`}>Welcome, {name}!</Text>
-        <Text style={tw`text-lg text-orange-600 mt-2`}>🔥 Streak: {streak}</Text>
+    <ScrollView contentContainerStyle={tw`px-6 py-8 bg-gray-50`}>
+      {/* Welcome + Streak Card */}
+      <View style={tw`bg-white rounded-2xl shadow-lg p-6 mb-8 flex-row justify-between items-center`}>
+        <Text style={tw`text-2xl font-bold text-gray-800`}>Welcome, {name}!</Text>
+        <View style={tw`flex-row items-center bg-orange-300 rounded-full px-3 py-3`}>
+          <Text style={tw`text-medium font-semibold text-white mr-2`}>🔥</Text>
+          <Text style={tw`text-medium font-semibold text-white`}>Streak: {streak}</Text>
+        </View>
       </View>
 
-    {/* guide section  */}
-      <Text style={tw`text-xl font-bold mt-8 mb-3`}>📘 Disaster Guides</Text>
-      <View style={tw`flex-row flex-wrap justify-center`}>
+      {/* Guides Section Card */}
+      <View style={tw`bg-white rounded-2xl shadow-lg p-6 mb-8`}>
+        <Text style={tw`text-xl font-bold mb-4 text-gray-900`}>📘 Disaster Guides</Text>
         <FlatList
-        horizontal
-        data={guides}
-        keyExtractor={(item) => item.id}
-        scrollEnabled={false}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={tw`bg-white rounded-xl mb-4 overflow-hidden w-25 mx-2`}
-            onPress={() => navigation.navigate("GuideDetails", item)}
-          >
-            <Image source={item.image} style={tw`w-[90%] h-32`} resizeMode="cover" />
-            <View style={tw`p-3`}>
-              <Text style={tw`text-base font-semibold`}>{item.title}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={guides}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={tw`bg-gray-100 rounded-xl overflow-hidden shadow-md mx-2 w-32`}
+              onPress={() => navigation.navigate("GuideDetails", item)}
+            >
+              <Image
+                source={item.image}
+                style={tw`w-[95%] h-20 rounded-t-xl`}
+                resizeMode="cover"
+              />
+              <View style={tw`p-2`}>
+                <Text
+                  numberOfLines={2}
+                  style={tw`text-sm font-semibold text-gray-800`}
+                >
+                  {item.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       </View>
 
-
-        {/* games section */}
-         <Text style={tw`text-xl font-bold mt-8 mb-3`}>📘 Games</Text>
-      <Pressable
-        onPress={() => navigation.navigate("Splash")}
-        style={tw`bg-blue-600 py-3 px-4 rounded-xl mt-6 items-center`}
-      >
-        <Text style={tw`text-white font-semibold`}>Take the Quiz</Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => navigation.navigate("PackBagGame")}
-        style={tw`bg-green-600 py-3 px-4 rounded-xl mt-4 mb-40 items-center`}
-      >
-        <Text style={tw`text-white font-semibold`}>Pack the Emergency Kit Bag</Text>
-      </Pressable>
+      {/* Games Section Card */}
+      <View style={tw`bg-white rounded-2xl shadow-lg p-6`}>
+        <Text style={tw`text-xl font-bold mb-4 text-gray-900`}>🎮 Games</Text>
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={games}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={tw`bg-gray-100 rounded-xl overflow-hidden shadow-md mx-2 w-32`}
+              onPress={() => navigation.navigate(item.screenName)}
+            >
+              <Image
+                source={item.image}
+                style={tw`w-[100%] h-20 rounded-t-xl px-2`}
+                resizeMode="cover"
+              />
+              <View style={tw`p-2`}>
+                <Text
+                  numberOfLines={2}
+                  style={tw`text-sm font-semibold text-gray-800`}
+                >
+                  {item.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </ScrollView>
   );
 };

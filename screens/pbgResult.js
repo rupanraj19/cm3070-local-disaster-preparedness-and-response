@@ -7,14 +7,15 @@ import tw from 'twrnc';
 
 const PbgResult = () => {
       const route = useRoute()
-      const {score} = route.params;
+      const {score, badge} = route.params;
 
       const [filledStars, setFilledStars] = useState(0);
+      const [showBadge, setShowBadge] = useState(false);
 
   // Decide number of stars
   const calculateStars = () => {
-    if (score === 50) return 3;
-    else if (score >= 30) return 2;
+    if (score === 30) return 3;
+    else if (score >= 20) return 2;
     else if (score >= 10) return 1;
     return 0;
   };
@@ -34,6 +35,12 @@ const PbgResult = () => {
       timeoutIds.push(
         setTimeout(() => setFilledStars(i), i * 500) // 500ms gap
       );
+    }
+
+    // Show badge *after* stars animation is done
+    if (badge) {
+      const badgeTimeout = setTimeout(() => setShowBadge(true), earnedStars * 500 + 500);
+      timeoutIds.push(badgeTimeout);
     }
     return () => timeoutIds.forEach(clearTimeout);
   }, []);
@@ -73,6 +80,21 @@ const PbgResult = () => {
           );
         })}
       </View>
+      {/* Badge animation comes AFTER stars finish popping in */}
+      {showBadge && badge && (
+        <View style={tw`items-center mt-8`}>
+          <Animatable.Image
+            animation="bounceInDown"
+            duration={1000}
+            source={require('../assets/images/bagbadge.png')}
+            style={tw`w-28 h-28`}
+            resizeMode="contain"
+          />
+          <Text style={tw`text-yellow-600 text-base font-bold mt-2`}>
+            Badge Unlocked: {badge}
+          </Text>
+        </View>
+      )}
     </View>
   )
 }

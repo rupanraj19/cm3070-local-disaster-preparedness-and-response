@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import tw from 'twrnc';
-import { getFirestore, doc, updateDoc, increment, setDoc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, increment, setDoc, getDoc, arrayUnion } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import * as Animatable from 'react-native-animatable';
+
 
 
 const emergencyItems = [
@@ -17,6 +18,7 @@ const PackBagGame = ({ navigation }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [flyingItems, setFlyingItems] = useState([]);
   const [score, setScore] = useState(0);
+
 
  const handleItemPress = (item) => {
   const isAlreadySelected = selectedItems.includes(item.name);
@@ -65,6 +67,9 @@ const handleSubmit = async () => {
   const totalScore = correctCount.length * 10;
   setScore(totalScore);
 
+  const MAX_SCORE = emergencyItems.filter(item => item.isCorrect).length * 10;
+  const earnedBadge = totalScore === MAX_SCORE;
+
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -74,30 +79,44 @@ const handleSubmit = async () => {
     const userRef = doc(db, 'users', userId);
 
     try {
-      // First, increment points in user document
-      await updateDoc(userRef, {
-        points: increment(totalScore),
-      });
+      const updates = { points: increment(totalScore) };
+      if (earnedBadge) {
+        updates.badges = arrayUnion("PackBagMaster");
+      }
+
+      await updateDoc(userRef, updates);
       console.log(`${totalScore} points added`);
 
-      // Now, get the latest user data (name + points)
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data();
       const username = userData.username || 'Unknown';
       const updatedPoints = (userData.points || 0) + totalScore;
 
-      // Update leaderboard with latest info
       await updateLeaderboard(username, updatedPoints);
     } catch (err) {
       console.error('Error updating Firestore:', err);
     }
   }
 
-  navigation.navigate('PbgResult', { score: totalScore });
+  // Navigate to result screen after optional delay
+  if (earnedBadge) {
+    setTimeout(() => {
+      navigation.navigate('PbgResult', {
+        score: totalScore,
+        badge: "PackBagMaster"
+      });
+    }, 1500);
+  } else {
+    navigation.navigate('PbgResult', { score: totalScore });
+  }
 };
 
 
+
   return (
+    <ScrollView>
+
+
     <View style={tw`p-4 mt-2`}>
 
       <Text style={tw`text-lg text-center mb-2`}>Select the Correct Items:</Text>
@@ -164,6 +183,7 @@ const handleSubmit = async () => {
         <Text style={tw`text-white text-lg text-center`}>Submit</Text>
       </TouchableOpacity>
     </View>
+  </ScrollView>
   );
 };
 

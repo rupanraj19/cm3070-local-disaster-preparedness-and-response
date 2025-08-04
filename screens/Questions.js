@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {useRoute} from "@react-navigation/native"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { quizzes } from '../config/question'
-import { getFirestore, doc, updateDoc, increment } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, increment, arrayUnion } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import tw from "twrnc"
 import * as Progress from "react-native-progress"
@@ -30,21 +30,30 @@ const Questions = ({navigation}) => {
           const db = getFirestore();
     const auth = getAuth();
     const userId = auth.currentUser?.uid;
+if (userId) {
+    const userRef = doc(db, 'users', userId);
 
-    if (userId) {
-      const userRef = doc(db, 'users', userId);
-      updateDoc(userRef, {
-        points: increment(score),
-      })
-      .then(() => {
-        console.log(`${score} points added to Firestore`);
-      })
-      .catch((err) => {
-        console.error('Error updating points:', err);
-      });
+    const updates = {
+      points: increment(score),
+    };
+
+    // Unique badge name for each quizType
+    if (score === 50) {
+      const badgeName = `${quizType}QuizMaster`;
+      updates.badges = arrayUnion(badgeName);
     }
 
-    navigation.navigate("Score", {score: score})
+    updateDoc(userRef, updates)
+      .then(() => {
+        console.log("Points and badge updated");
+      })
+      .catch((err) => {
+        console.error("Error updating user:", err);
+      });
+  }
+
+
+     navigation.navigate("Score", { score, quizType });
     }
     else{
       setCurrentQuestionIndex(currentQuestionIndex+1)
