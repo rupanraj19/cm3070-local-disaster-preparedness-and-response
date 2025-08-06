@@ -2,6 +2,7 @@
 import { View, Image, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import tw from "twrnc";
+import { useTheme } from '../context/ThemeContext';
 
 // Import screen stacks
 import SosScreen from '../screens/SosScreen';
@@ -24,6 +25,10 @@ const CustomTabBarButton = ({ children, onPress }) => (
 );
 
 const Tabs = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -35,12 +40,13 @@ const Tabs = () => {
           left: 20,
           right: 20,
           elevation: 0,
-          backgroundColor: '#ffffff',
-          borderRadius: 15,
+          backgroundColor: isDark?  '#000': '#ffffff',
+          borderRadius: 10,
           height: 90,
         },
         tabBarLabelStyle: {
           fontSize: 12,
+          color: isDark?  '#000': '#ffffff',
         },
       }}
     >

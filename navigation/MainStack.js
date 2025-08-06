@@ -31,6 +31,7 @@ export default function MainStack() {
             const name = userData.username || 'User';
             const lastLogin = userData.lastLoginDate || null;
             const streak = userData.streak || 0;
+            const highestStreak = userData.highestStreak || 0;
 
             const todayStr = format(new Date(), 'yyyy-MM-dd');
             let newStreak = 1;
@@ -45,10 +46,14 @@ export default function MainStack() {
               else if (diffDays === 0) newStreak = streak;
             }
 
+             // Calculate new highest streak if applicable
+            const newHighestStreak = Math.max(highestStreak, newStreak);
+
             // Save updated streak and login date
             await updateDoc(userRef, {
               lastLoginDate: todayStr,
-              streak: newStreak
+              streak: newStreak,
+              highestStreak: newHighestStreak
             });
 
             // ✅ Set context data for global use

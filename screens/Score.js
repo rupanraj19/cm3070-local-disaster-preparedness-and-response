@@ -5,8 +5,8 @@ import * as Animatable from 'react-native-animatable';
 import tw from 'twrnc';
 
 const badgeImages ={
-  floodsafety: require('../assets/images/bagbadge.png'),
-  floodawareness: require('../assets/images/bagbadge.png')
+  floodsafety: require('../assets/images/floodpro.png'),
+  floodawareness: require('../assets/images/high-score.png')
 
 }
 
@@ -52,8 +52,8 @@ const Score = ({ navigation }) => {
 
     return () => timeoutIds.forEach(clearTimeout);
   }, []);
-  console.log("QUIZ TYPE:", quizType);
-  console.log("BADGE IMAGE EXISTS:", !!badgeImages[quizType]);
+  // console.log("QUIZ TYPE:", quizType);
+  // console.log("BADGE IMAGE EXISTS:", !!badgeImages[quizType]);
 
 
   return (

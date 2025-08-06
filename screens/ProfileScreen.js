@@ -1,51 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { getFirestore, doc, getDoc,collection, onSnapshot } from 'firebase/firestore';
+import { getFirestore, doc, collection, onSnapshot } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
+import { useTheme } from '../context/ThemeContext';
 
 const badgeImages = {
   PackBagMaster: require('../assets/images/bagbadge.png'),
-  floodSafetyQuizMaster: require('../assets/images/bagbadge.png'),
-  // Add more badge images here...
+  floodSafetyQuizMaster: require('../assets/images/high-score.png'),
+  DisasterAware: require('../assets/images/aware.png'),
+  FloodResponder: require('../assets/images/ready.png'),
+  KitMaster: require('../assets/images/packbag.png'),
 };
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = ({ navigation }) => {
+  const { bgColor, textColor, borderColor} = useTheme();
   const [username, setUsername] = useState('');
   const [points, setPoints] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [highestStreak, setHighestStreak] = useState(1);
   const [badges, setBadges] = useState([]);
   const [createdAt, setCreatedAt] = useState('');
   const [leaderboard, setLeaderboard] = useState([]);
 
+
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (!user) return;
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) return;
 
-      const db = getFirestore();
-      const userRef = doc(db, 'users', user.uid);
-      const snap = await getDoc(userRef);
+    const db = getFirestore();
+    const userRef = doc(db, 'users', user.uid);
 
+    // 🔄 Realtime listener for user data
+    const unsubscribe = onSnapshot(userRef, (snap) => {
       if (snap.exists()) {
         const data = snap.data();
         setUsername(data.username || 'User');
         setPoints(data.points || 0);
         setStreak(data.streak || 0);
+        setHighestStreak(data.highestStreak || 0);
         setBadges(Array.isArray(data.badges) ? data.badges : []);
         if (data.createdAt?.toDate) {
           const date = data.createdAt.toDate();
           setCreatedAt(date.toDateString());
         }
       }
-    };
+    });
 
-    fetchUserInfo();
+    return () => unsubscribe();
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const db = getFirestore();
     const leaderboardRef = collection(db, 'leaderboard');
 
@@ -68,8 +75,8 @@ const ProfileScreen = ({navigation}) => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={tw`px-6 py-8`}>
-       {/* Settings Button */}
+    <ScrollView contentContainerStyle={tw`px-6 py-8 ${bgColor}`}>
+      {/* Settings Button */}
       <TouchableOpacity
         style={tw`absolute top-10 right-6 z-10`}
         onPress={() => navigation.navigate('Settings')}
@@ -78,22 +85,26 @@ const ProfileScreen = ({navigation}) => {
       </TouchableOpacity>
 
       {/* Profile Header */}
-      <View style={tw`items-center mb-8`}>
+      <View style={tw`items-center mb-8 shadow-lg`}>
         <Image
           source={require('../assets/images/user.png')}
           style={tw`w-24 h-24 rounded-full mb-3`}
         />
-        <Text style={tw`text-xl font-semibold`}>{username}</Text>
+        <Text style={tw`text-xl font-semibold ${textColor}`}>{username}</Text>
         <Text style={tw`text-sm text-gray-500`}>Joined: {createdAt}</Text>
       </View>
 
       {/* Overview Section */}
-      <View style={tw`bg-white rounded-2xl shadow p-5 mb-4`}>
-        <Text style={tw`text-lg font-semibold mb-4`}>Overview</Text>
+      <View style={tw`${bgColor} rounded-2xl shadow-lg p-5 mb-4 ${borderColor}`}>
+        <Text style={tw`text-lg font-semibold mb-4 ${textColor}`}>Overview</Text>
         <View style={tw`flex-row justify-between`}>
           <View style={tw`items-center`}>
             <Text style={tw`text-2xl font-bold text-blue-600`}>{streak}</Text>
             <Text style={tw`text-sm text-gray-500`}>Streak</Text>
+          </View>
+          <View style={tw`items-center`}>
+            <Text style={tw`text-2xl font-bold text-red-600`}>{highestStreak}</Text>
+            <Text style={tw`text-sm text-gray-500 `}>Highest Streak</Text>
           </View>
           <View style={tw`items-center`}>
             <Text style={tw`text-2xl font-bold text-green-600`}>{points}</Text>
@@ -103,9 +114,9 @@ const ProfileScreen = ({navigation}) => {
       </View>
 
       {/* Badges Section */}
-      <View style={tw`bg-white rounded-2xl shadow p-5 mb-4`}>
-        <Text style={tw`text-lg font-semibold mb-4`}>Badges</Text>
-        <View style={tw`flex-row flex-wrap`}>
+      <View style={tw`${bgColor} rounded-2xl shadow-lg p-5 mb-4 ${borderColor}`}>
+        <Text style={tw`text-lg font-semibold mb-4 ${textColor}`}>Badges</Text>
+        <View style={tw`flex-row flex-wrap justify-around items-center`}>
           {badges.length > 0 ? (
             badges.map((badge) => (
               <View key={badge} style={tw`items-center mr-4 mb-4`}>
@@ -113,7 +124,7 @@ const ProfileScreen = ({navigation}) => {
                   source={badgeImages[badge]}
                   style={{ width: 60, height: 60, borderRadius: 10 }}
                 />
-                <Text style={tw`text-xs mt-1`}>{badge}</Text>
+                <Text style={tw`text-xs mt-1 text-gray-500`}>{badge}</Text>
               </View>
             ))
           ) : (
@@ -121,12 +132,13 @@ const ProfileScreen = ({navigation}) => {
           )}
         </View>
       </View>
-            {/* Leaderboard Card */}
-      <View style={tw`bg-white rounded-2xl shadow-lg p-6 mb-20`}>
-        <Text style={tw`text-xl font-semibold text-gray-800 mb-4`}>🏆 Leaderboard</Text>
+
+      {/* Leaderboard */}
+      <View style={tw`${bgColor} rounded-2xl shadow-lg p-6 mb-40 ${borderColor}`}>
+        <Text style={tw`text-xl font-semibold ${textColor} mb-4`}>🏆 Leaderboard</Text>
         {leaderboard.map((user, index) => (
           <View key={user.id} style={tw`flex-row justify-between mb-2`}>
-            <Text style={tw`text-base text-gray-700`}>
+            <Text style={tw`text-base text-gray-500`}>
               {index + 1}. {user.username}
             </Text>
             <Text style={tw`text-base text-gray-500`}>{user.points} pts</Text>

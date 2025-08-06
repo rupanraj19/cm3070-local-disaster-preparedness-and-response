@@ -2,7 +2,8 @@
 import React from "react";
 import {View, Text, Button, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import {Table, Row, Rows} from 'react-native-table-component'
-
+import tw from 'twrnc'
+import { useTheme } from '../context/ThemeContext';
 
 const tableHead = ['Service', 'Number'];
 const tableData = [
@@ -13,112 +14,68 @@ const tableData = [
     ['Non-Emergency Ambulance', '1777'],
   ];
 
-const ContactScreen = ({navigation}) => {
-    return (
-        <SafeAreaView>
-        <ScrollView style={styles.container} >
-            <View >
+const ContactScreen = ({ navigation }) => {
+  const { bgColor, textColor, borderColor } = useTheme();
 
+  return (
+    <SafeAreaView style={tw`${bgColor}`}>
+      <ScrollView style={tw`pb-25`}>
+        <View>
+          {/* About Us */}
+          <View style={tw`${bgColor} rounded-xl p-2 mx-3 mt-2 mb-1 shadow-xl ${borderColor}`}>
+            <Text style={tw`text-xl font-bold mb-2 ml-1 ${textColor}`}>About Us</Text>
+            <Text style={tw`text-base mx-1 pb-1 ${textColor}`}>
+              This app is my final year project, created to help people in Singapore prepare for floods.
+              Using gamification, I aim to make learning about disaster response more engaging and effective.
+            </Text>
+          </View>
 
-            {/* about us */}
-            <View style={[styles.sectionBox,styles.aboutusContainer]}>
-                <Text style={styles.heading}>About US</Text>
-                <Text style={styles.text}>This app is my final year project, created to help people in Singapore prepare for floods. Using gamification, I aim to make learning about disaster response more engaging and effective.</Text>
+          {/* Contact Us */}
+          <View style={tw`${bgColor} rounded-xl p-2 mx-3 mt-2 mb-1 shadow-xl ${borderColor}`}>
+            <Text style={tw`text-xl font-bold mb-2 ml-1 ${textColor}`}>Contact Us</Text>
+            <Text style={tw`text-base mx-1 pb-1 ${textColor}`}>Get in touch with us here.</Text>
+            <View style={tw`items-center justify-center`}>
+              <TouchableOpacity
+                style={tw`bg-[#447D9B] py-3 px-5 rounded-lg mt-3 w-1/2 items-center`}
+                onPress={() => navigation.navigate('Feedback')}
+              >
+                <Text style={tw`text-white text-base font-bold`}>Feedback</Text>
+              </TouchableOpacity>
             </View>
+          </View>
 
-            {/* contact us */}
-            <View style={[styles.sectionBox,styles.contactContainer]}>
-                <Text style={styles.heading}>Contact Us</Text>
-                <Text style={styles.text}>Get in touch with us here.</Text>
-                <View style={{alignItems:'center', justifyContent:'center'}}>
-                    <TouchableOpacity style={styles.btn} onPress={()=>navigation.navigate('Feedback')}>
-                    <Text style={styles.btnText}>Feedback</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-
-
-            {/* emergency contacts */}
-            <View style={[styles.sectionBox,styles.emergencyContainer]}>
-            <Text style={styles.heading}>Emergency Contacts</Text>
-            <Text style={[styles.text, {marginBottom: 5}]}>For emergencies, please call the relevant numbers:</Text>
-            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9'}}>
-                <Row data={tableHead} style={styles.head} textStyle={styles.headText} />
-                <Rows data={tableData} textStyle={styles.text} />
+          {/* Emergency Contacts */}
+          <View style={tw`${bgColor} rounded-xl p-2 mx-3 mt-2 mb-20 shadow-xl ${borderColor}`}>
+            <Text style={tw`text-xl font-bold mb-2 ml-1 ${textColor}`}>Emergency Contacts</Text>
+            <Text style={tw`text-base mx-1 mb-2 ${textColor}`}>For emergencies, please call the relevant numbers:</Text>
+            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+              <Row data={tableHead} style={tw`h-10 bg-green-600`} textStyle={tw`text-white font-bold text-center`} />
+              <Rows data={tableData} textStyle={tw`text-base text-center py-2 ${textColor}`} />
             </Table>
-            </View>
+          </View>
+
         </View>
-        </ScrollView>
-        </SafeAreaView>
-
-
-    );
-}
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 export default ContactScreen;
 
-const styles =  StyleSheet.create({
-    container: {
-        // flex: 1,
-        backgroundColor:'white',
-        paddingBottom: 100,
-    },
-    aboutusContainer: {
-        // marginVertical: 20
-    },
-    contactContainer:{
-        // marginVertical: 20
-    },
-    emergencyContainer:{
-
-    },
-    heading: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginBottom: 8,
-        marginLeft: 4,
-    },
-    head: {
-        height: 40,
-        backgroundColor: '#4CAF50',
-    },
-    headText: {
-        fontWeight: 'bold',
-        color: '#fff',
-        textAlign: 'center',
-    },
-    text: {
-        marginHorizontal: 4,
-        fontSize: 16,
-        padding: 2,
-    },
-    btn: {
-        backgroundColor: '#447D9B',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginTop: 12,
-        width: '50%',
-    },
-    btnText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    sectionBox: {
-        backgroundColor: '#f2f2f2',
-        borderRadius: 12,
-        padding: 8,
-        marginTop: 10,
-        marginHorizontal: 10,
-        marginBottom: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 10 },
-        shadowRadius: 8,
-        elevation: 3, // for Android
-    }
+const styles = StyleSheet.create({
+  shadowBlack: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+shadowWhite: {
+  shadowColor: '#fff',
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.9,
+  shadowRadius: 5,
+  elevation: 5,
+},
 
 });

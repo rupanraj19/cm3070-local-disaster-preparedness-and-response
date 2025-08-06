@@ -74,7 +74,7 @@ async function cancelAllNotifications() {
 
 const NotificationSettingsScreen = () => {
 
-    const { theme, toggleTheme } = useTheme();
+    const { theme } = useTheme();
     const isDark = theme === 'dark';
     const bgStyle = isDark ? 'bg-black' : 'bg-white';
     const textColor = isDark ? 'text-white' : 'text-black';
