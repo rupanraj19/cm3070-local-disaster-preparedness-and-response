@@ -82,7 +82,7 @@ const Tabs = () => {
         name="SOS"
         component={SosScreen}
         options={{
-          headerShown: true,
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <Image
               source={require('../assets/icons/sos.png')}

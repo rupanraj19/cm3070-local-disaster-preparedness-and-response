@@ -11,13 +11,13 @@ export const ThemeProvider = ({ children }) => {
   const bgColor = isDark ? 'bg-black' : 'bg-white';
   const textColor = isDark ? 'text-white' : 'text-black';
   const borderColor = isDark ? 'border-2 border-white' : 'border-black';
-
+  const statusBarStyle = isDark ? 'light' : 'dark';
   const toggleTheme = () =>
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
 
   return (
     <ThemeContext.Provider
-      value={{ theme, isDark, toggleTheme, bgColor, textColor, borderColor }}
+      value={{ theme, isDark, toggleTheme, bgColor, textColor, borderColor, statusBarStyle, }}
     >
       {children}
     </ThemeContext.Provider>

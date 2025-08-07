@@ -19,6 +19,7 @@ const ContactScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={tw`${bgColor}`}>
+      <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Contact</Text>
       <ScrollView style={tw`pb-25`}>
         <View>
           {/* About Us */}
@@ -45,7 +46,7 @@ const ContactScreen = ({ navigation }) => {
           </View>
 
           {/* Emergency Contacts */}
-          <View style={tw`${bgColor} rounded-xl p-2 mx-3 mt-2 mb-20 shadow-xl ${borderColor}`}>
+          <View style={tw`${bgColor} rounded-xl p-2 mx-3 mt-2 mb-40 shadow-xl ${borderColor}`}>
             <Text style={tw`text-xl font-bold mb-2 ml-1 ${textColor}`}>Emergency Contacts</Text>
             <Text style={tw`text-base mx-1 mb-2 ${textColor}`}>For emergencies, please call the relevant numbers:</Text>
             <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>

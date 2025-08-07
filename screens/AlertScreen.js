@@ -2,7 +2,9 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Switch, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-
+import tw from 'twrnc'
+import { useTheme } from '../context/ThemeContext';
+import { StatusBar } from 'expo-status-bar';
 
 const STATIC_STATIONS = [
   { id: 'S224', name: 'Airport Boulevard', latitude: 1.34392, longitude: 103.98409 },
@@ -75,6 +77,7 @@ const AlertsScreen = ({ navigation }) => {
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [affectedAreas, setAffectedAreas] = useState([]);
+  const { bgColor, textColor,borderColor} = useTheme();
 
   useEffect(() => {
     (async () => {
@@ -199,12 +202,13 @@ const AlertsScreen = ({ navigation }) => {
   }, [location, showStations, rainStations]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={tw`${bgColor}`}>
+      <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Alert</Text>
       <ScrollView>
-        <View style={styles.container}>
-          <Text style={styles.heading}>Flood & Weather Alerts</Text>
-
-          <View style={styles.mapContainer}>
+        <View style={tw`flex-1 pt-5 px-4 ${bgColor} pb-12`}>
+        <Text style={tw`text-xl font-bold mb-2 text-center ${textColor}`}>Flood & Weather Alerts</Text>
+    {/* Map container */}
+           <View style={tw`mb-4`}>
             <MapView
               key={showStations + rainStations.map(r => r.value).join(',')} // force re-render if data changes
               style={styles.map}
@@ -225,9 +229,9 @@ const AlertsScreen = ({ navigation }) => {
               ))}
             </MapView>
 
-            <View style={styles.toggleContainer}>
-              <View style={styles.toggleRow}>
-                <Text style={styles.toggleLabel}>Show Stations</Text>
+ <View style={tw`mt-2 mb-2`}>
+      <View style={tw`flex-row items-center justify-between my-1`}>
+        <Text style={tw`text-sm ${textColor}`}>Show Stations</Text>
                 <Switch
                   onValueChange={setShowStations}
                   value={showStations}
@@ -237,13 +241,14 @@ const AlertsScreen = ({ navigation }) => {
               </View>
             </View>
 
-            <Text style={styles.mapCaption}>
+             <Text style={tw`text-xs text-gray-500 text-center mt-1`}>
               Rainfall Intensity (mm): Green &lt; 10, Yellow 10–20, Red &gt; 20
             </Text>
           </View>
 
-          <View style={styles.weatherContainer}>
-            <Text style={styles.sectionTitle}>Current Weather</Text>
+           {/* Weather Section */}
+  <View style={tw`mb-4 p-2 ${borderColor} rounded bg-blue-300`}>
+    <Text style={tw`text-lg font-bold mb-2 text-center`}>Current Weather</Text>
             {weatherLoading ? (
               <ActivityIndicator size="small" color="#007AFF" />
             ) : weather && weather.main && weather.weather && weather.weather.length > 0 ? (
@@ -254,25 +259,26 @@ const AlertsScreen = ({ navigation }) => {
                 <Text style={styles.weatherText}>💧 Humidity: {weather.main.humidity}%</Text>
               </View>
             ) : (
-              <Text style={styles.weatherText}>No weather data available.</Text>
+              <Text style={tw`text-base text-center`}>No weather data available.</Text>
             )}
           </View>
 
-          <View style={styles.alertTable}>
-            <Text style={styles.alertTitle}>Weather Alerts (NEA)</Text>
+            {/* Alerts */}
+  <View style={tw`mb-4 p-2 border border-gray-300 rounded bg-gray-100`}>
+    <Text style={tw`text-lg font-bold mb-2 text-center`}>Weather Alerts (NEA)</Text>
             {loading ? (
               <ActivityIndicator size="small" color="#007AFF" />
             ) : (
               <>
-                <View style={styles.alertRow}>
-                  <Text style={styles.alertLabel}>Heavy Rain:</Text>
-                  <Text style={[styles.alertStatus, { color: heavyRain ? 'red' : 'green' }]}>
+        <View style={tw`flex-row justify-between my-1`}>
+          <Text style={tw`text-base`}>Heavy Rain:</Text>
+          <Text style={tw`text-base font-bold ${heavyRain ? 'text-red-500' : 'text-green-600'}`}>
                     {heavyRain ? 'Yes' : 'No'}
                   </Text>
                 </View>
-                <View style={styles.alertRow}>
-                  <Text style={styles.alertLabel}>Flood Warning:</Text>
-                  <Text style={[styles.alertStatus, { color: heavyRain ? 'red' : 'green' }]}>
+        <View style={tw`flex-row justify-between my-1`}>
+          <Text style={tw`text-base`}>Flood Warning:</Text>
+          <Text style={tw`text-base font-bold ${heavyRain ? 'text-red-500' : 'text-green-600'}`}>
                     {heavyRain ? 'Yes' : 'No'}
                   </Text>
                 </View>
@@ -281,18 +287,20 @@ const AlertsScreen = ({ navigation }) => {
           </View>
 
           {showStations && (
-            <View style={styles.stationsContainer}>
-              <View style={styles.tableHeader}>
-                <Text style={styles.tableColName}>Station</Text>
-                <Text style={styles.tableColRain}>Rainfall (mm)</Text>
-                <Text style={styles.tableColStatus}>Status</Text>
+    <View style={tw`mb-4`}>
+      <View style={tw`flex-row justify-between py-1 ${borderColor}`}>
+        <Text style={tw`flex-3 text-sm font-bold ${textColor}`}>Station</Text>
+        <Text style={tw`flex-2 text-sm text-center font-bold ${textColor}`}>Rainfall (mm)</Text>
+        <Text style={tw`flex-2 text-sm text-center font-bold ${textColor}`}>Status</Text>
               </View>
               {rainStations.map((station) => (
-                <View key={station.id} style={styles.tableRow}>
-                  <Text style={styles.tableColName}>{station.name}</Text>
-                  <Text style={styles.tableColRain}>{station.value.toFixed(1)}</Text>
-                  <Text style={[styles.tableColStatus, { color: station.isHeavyRain ? 'red' : 'green' }]}>
-                    {station.isHeavyRain ? '⚠️ Heavy' : '✅ Normal'}
+                <View key={station.id} style={tw`flex-row justify-between py-1 border-b border-gray-100`}>
+          <Text style={tw`flex-3 text-sm ${textColor}`}>{station.name}</Text>
+          <Text style={tw`flex-2 text-sm text-center ${textColor}`}>{station.value.toFixed(1)}</Text>
+          <Text
+            style={tw`flex-2 text-sm text-center ${station.isHeavyRain ? 'text-red-500' : 'text-green-600'}`}
+          >
+                    {station.isHeavyRain ? 'Heavy' : 'Normal'}
                   </Text>
                 </View>
               ))}
@@ -300,151 +308,25 @@ const AlertsScreen = ({ navigation }) => {
           )}
 
           <TouchableOpacity
-            style={styles.flashFloodsButton}
+              style={tw`bg-orange-600 py-3 px-6 rounded items-center mt-4 mb-30`}
             onPress={() => navigation.navigate('FlashFloods', { affectedAreas })}
           >
-            <Text style={styles.flashFloodsButtonText}>Flash Floods</Text>
+           <Text style={tw`text-white text-base font-bold`}>Flash Floods</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
+
   );
 };
 
 export default AlertsScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 16,
-    backgroundColor: '#fff',
-    paddingBottom: 50,
-  },
-  heading: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  mapContainer: {
-    marginBottom: 16,
-  },
+
   map: {
     width: Dimensions.get('window').width - 32,
     height: 300,
   },
-  toggleContainer: {
-    flexDirection: 'column',
-    marginTop: 8,
-    marginBottom: 8,
-  },
-  toggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 4,
-  },
-  toggleLabel: {
-    fontSize: 14,
-    color: '#333',
-  },
-  mapCaption: {
-    fontSize: 12,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 4,
-  },
-  weatherContainer: {
-    marginBottom: 16,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: '#f0f8ff',
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  weatherInfo: {
-    alignItems: 'center',
-  },
-  weatherText: {
-    fontSize: 16,
-    marginVertical: 2,
-  },
-  alertTable: {
-    marginBottom: 16,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: '#f9f9f9',
-  },
-  alertTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  alertRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 5,
-  },
-  alertLabel: {
-    fontSize: 16,
-  },
-  alertStatus: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  stationsContainer: {
-    marginBottom: 16,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 6,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 6,
-    borderBottomWidth: 0.5,
-    borderColor: '#eee',
-  },
-  tableColName: {
-    flex: 1.5,
-    fontSize: 14,
-  },
-  tableColRain: {
-    flex: 1,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  tableColStatus: {
-    flex: 1,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  flashFloodsButton: {
-    backgroundColor: '#FF5722',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 20,
-  },
-  flashFloodsButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+
 });

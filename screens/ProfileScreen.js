@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { getFirestore, doc, collection, onSnapshot } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useTheme } from '../context/ThemeContext';
+
 
 const badgeImages = {
   PackBagMaster: require('../assets/images/bagbadge.png'),
@@ -21,6 +22,7 @@ const ProfileScreen = ({ navigation }) => {
   const [streak, setStreak] = useState(0);
   const [highestStreak, setHighestStreak] = useState(1);
   const [badges, setBadges] = useState([]);
+  const [showAllBadges, setShowAllBadges] = useState(false);
   const [createdAt, setCreatedAt] = useState('');
   const [leaderboard, setLeaderboard] = useState([]);
 
@@ -75,7 +77,9 @@ const ProfileScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={tw`px-6 py-8 ${bgColor}`}>
+    <SafeAreaView style={tw`${bgColor}`}>
+      <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Profile</Text>
+      <ScrollView contentContainerStyle={tw`px-6 py-8 ${bgColor}`}>
       {/* Settings Button */}
       <TouchableOpacity
         style={tw`absolute top-10 right-6 z-10`}
@@ -115,23 +119,36 @@ const ProfileScreen = ({ navigation }) => {
 
       {/* Badges Section */}
       <View style={tw`${bgColor} rounded-2xl shadow-lg p-5 mb-4 ${borderColor}`}>
-        <Text style={tw`text-lg font-semibold mb-4 ${textColor}`}>Badges</Text>
-        <View style={tw`flex-row flex-wrap justify-around items-center`}>
-          {badges.length > 0 ? (
-            badges.map((badge) => (
-              <View key={badge} style={tw`items-center mr-4 mb-4`}>
-                <Image
-                  source={badgeImages[badge]}
-                  style={{ width: 60, height: 60, borderRadius: 10 }}
-                />
-                <Text style={tw`text-xs mt-1 text-gray-500`}>{badge}</Text>
-              </View>
-            ))
-          ) : (
-            <Text style={tw`text-base text-gray-400`}>No badges earned yet.</Text>
-          )}
+  <View style={tw`flex-row justify-between items-center mb-4`}>
+    <Text style={tw`text-lg font-semibold ${textColor}`}>Badges</Text>
+    {badges.length > 2 && (
+      <TouchableOpacity onPress={() => setShowAllBadges(!showAllBadges)}>
+        <Text style={tw`text-blue-500 font-medium`}>
+          {showAllBadges ? 'See Less' : 'See All'}
+        </Text>
+      </TouchableOpacity>
+    )}
+  </View>
+        <View style={[
+      tw`flex-row flex-wrap justify-around items-center overflow-hidden`,
+      !showAllBadges && { height: 100 }
+    ]}
+>
+      {badges.length > 0 ? (
+      badges.map((badge) => (
+        <View key={badge} style={tw`items-center mr-4 mb-4`}>
+          <Image
+            source={badgeImages[badge]}
+            style={{ width: 60, height: 60, borderRadius: 10 }}
+          />
+          <Text style={tw`text-xs mt-1 text-gray-500`}>{badge}</Text>
         </View>
-      </View>
+      ))
+    ) : (
+      <Text style={tw`text-base text-gray-400`}>No badges earned yet.</Text>
+    )}
+  </View>
+</View>
 
       {/* Leaderboard */}
       <View style={tw`${bgColor} rounded-2xl shadow-lg p-6 mb-40 ${borderColor}`}>
@@ -146,6 +163,9 @@ const ProfileScreen = ({ navigation }) => {
         ))}
       </View>
     </ScrollView>
+    </SafeAreaView>
+
+
   );
 };
 

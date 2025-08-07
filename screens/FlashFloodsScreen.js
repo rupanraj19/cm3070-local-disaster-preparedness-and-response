@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert, ScrollView, Dimensions } from 'react-native';
 import MapView,  { Polygon, Marker } from 'react-native-maps';
+import tw from 'twrnc'
 import * as Location from 'expo-location';
+import { useTheme } from '../context/ThemeContext';
 
 const FlashFloodsScreen = ({ route }) => {
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [affectedAreas, setAffectedAreas] = useState(route.params?.affectedAreas || []);
-  console.log('Affected Areas:', affectedAreas);
+  const { bgColor, textColor,borderColor} = useTheme();
 
   useEffect(() => {
     (async () => {
@@ -28,29 +30,27 @@ const FlashFloodsScreen = ({ route }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Flash Flood Affected Areas</Text>
+    <View style={tw`flex-1 ${bgColor}`}>
+      <Text style={tw`text-xl font-bold text-center my-4 ${textColor}`}>Flash Flood Affected Areas</Text>
 
       {location ? (
         <MapView
-          style={styles.map}
+          style={{ width: Dimensions.get('window').width, height: 400 }}
           initialRegion={{
-          latitude: location ? location.latitude : 1.3521,
-          longitude: location ? location.longitude : 103.8198,
-          latitudeDelta: 0.5,
-          longitudeDelta: 0.5,
-        }}
-
-        >
-        {/* Your location marker */}
-        <Marker
-          coordinate={{
             latitude: location.latitude,
             longitude: location.longitude,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
           }}
-          title="Your Location"
-          pinColor="blue"
-        />
+        >
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            title="Your Location"
+            pinColor="blue"
+          />
           {affectedAreas.map((area) => (
             <Polygon
               key={area.id}
@@ -62,19 +62,19 @@ const FlashFloodsScreen = ({ route }) => {
           ))}
         </MapView>
       ) : (
-        <Text>Loading map...</Text>
+        <Text style={tw`text-center text-base mt-2 ${textColor}`}>Loading map...</Text>
       )}
 
-      <ScrollView style={styles.areaList}>
-        <Text style={styles.subHeading}>Affected Areas:</Text>
+      <ScrollView style={tw`p-4`}>
+        <Text style={tw`text-lg font-semibold mb-2 ${textColor}`}>Affected Areas:</Text>
         {affectedAreas.length > 0 ? (
           affectedAreas.map((area) => (
-            <Text key={area.id} style={styles.areaText}>
+            <Text key={area.id} style={tw`text-base mb-1 ${textColor} `}>
               - {area.name}
             </Text>
           ))
         ) : (
-          <Text style={styles.areaText}>No areas affected</Text>
+          <Text style={tw`text-base ${textColor}`}>No areas affected</Text>
         )}
       </ScrollView>
     </View>
@@ -82,33 +82,3 @@ const FlashFloodsScreen = ({ route }) => {
 };
 
 export default FlashFloodsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  heading: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 16,
-  },
-  map: {
-    // flex: 1,
-    width: '100%',
-    height: 400,
-  },
-  areaList: {
-    padding: 16,
-  },
-  subHeading: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  areaText: {
-    fontSize: 16,
-    marginBottom: 4,
-  },
-});

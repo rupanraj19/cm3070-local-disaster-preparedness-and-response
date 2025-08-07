@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert, TouchableOpacity, Switch } from "react-native";
+import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert, TouchableOpacity, Switch, SafeAreaView, ScrollView } from "react-native";
 import * as Location from "expo-location";
 import * as SMS from "expo-sms";
 import { auth, db } from "../firebase";
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { Audio } from 'expo-av';
+import tw from 'twrnc'
+import { useTheme } from '../context/ThemeContext';
 
 
 const SosScreen = () => {
@@ -14,7 +16,7 @@ const SosScreen = () => {
   const [sending, setSending] = useState(false);
   const [sound, setSound] = useState();
   const [playSoundEnabled, setPlaySoundEnabled] = useState(true);
-
+  const { bgColor, textColor,borderColor} = useTheme();
 
   // sound
   async function playSound(){
@@ -133,138 +135,97 @@ const SosScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Emergency SOS</Text>
+    <SafeAreaView style={tw`${bgColor}`}>
+      <ScrollView>
+      <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Emergency SOS</Text>
 
-      {/* Add Contact Form */}
-      <Text style={styles.label}>Add Emergency Contact</Text>
+    <View style={tw`${bgColor} p-5 pb-60 `}>
+
+        <View style={tw`${bgColor} rounded-2xl shadow-lg p-4 mb-8 ${borderColor}`}>
+          {/* Add Contact Form */}
+      <Text style={tw`text-lg mt-5 mb-2 ${textColor}`}>Add Emergency Contact</Text>
       <TextInput
-        style={styles.input}
+        style={tw`border border-gray-400 rounded p-3 mb-2 ${textColor}`}
         placeholder="Name"
+        placeholderTextColor="#555"
         value={name}
         onChangeText={setName}
       />
       <TextInput
-        style={styles.input}
+        style={tw`border border-gray-400 rounded p-3 mb-2 ${textColor}`}
         placeholder="Phone Number"
+        placeholderTextColor="#555"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
-      <Button title="Save Contact" onPress={saveContact} />
-
-      {/* Contact List */}
-      <Text style={styles.label}>Your Emergency Contacts:</Text>
-      <FlatList
-        data={contacts}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <Text style={styles.contactItem}>{item.name} - {item.phone}</Text>
-        )}
-      />
-
-      {/* delete list */}
-      <FlatList
-        data={contacts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 4 }}>
-            <Text style={styles.contactItem}>{item.name} - {item.phone}</Text>
-            <TouchableOpacity onPress={() => {
-                Alert.alert(
-                "Delete Contact",
-                `Are you sure you want to delete ${item.name}?`,
-                [
-                    { text: "Cancel", style: "cancel" },
-                    { text: "Delete", style: "destructive", onPress: () => deleteContact(item.id) }
-                ]
-                );
-            }}>
-                <Text style={{ color: 'red', fontWeight: 'bold' }}>Delete</Text>
-            </TouchableOpacity>
-            </View>
-        )}
-        />
+      <TouchableOpacity onPress={saveContact} style={tw`bg-blue-500 rounded px-4 py-3 mb-4 mx-20 mt-2`}>
+        <Text style={tw`text-center font-medium text-white`} >Save Contact</Text>
+      </TouchableOpacity>
 
       {/* Toggle Sound */}
-      <View style={{  flex: 2, flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-        <Text style={{ fontSize: 16, marginRight: 10 }}>Play Sound on SOS:</Text>
+      <View style={tw`flex-row items-center justify-between`}>
+        <Text style={tw`text-base mr-2 ${textColor}`}>Play Sound on SOS:</Text>
         <Switch
           value={playSoundEnabled}
           onValueChange={setPlaySoundEnabled}
         />
       </View>
+        </View>
 
+
+        <View style={tw`${bgColor} rounded-2xl shadow-lg p-4 mb-8 ${borderColor}`}>
+          {/* Contact List */}
+          <Text style={tw`text-lg mt-5 mb-2 ${textColor}`}>Your Emergency Contacts:</Text>
+
+          {contacts.length === 0 ? (
+            <Text style={tw`text-base italic ${textColor}`}>No contacts saved yet.</Text>
+          ) : (
+            contacts.map((item) => (
+              <View key={item.id} style={tw`flex-row justify-between items-center py-2`}>
+                <Text style={tw`text-base ${textColor}`}>{item.name} - {item.phone}</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    Alert.alert(
+                      "Delete Contact",
+                      `Are you sure you want to delete ${item.name}?`,
+                      [
+                        { text: "Cancel", style: "cancel" },
+                        {
+                          text: "Delete",
+                          style: "destructive",
+                          onPress: () => deleteContact(item.id),
+                        },
+                      ]
+                    )
+                  }
+                >
+                  <Text style={tw`text-red-600 font-bold`}>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </View>
       {/* SOS Button */}
-      <View style={styles.sosButtonContainer}>
+      <View>
         <TouchableOpacity
-        style={[styles.sosButton, sending && styles.disabledButton]}
+         style={tw`bg-red-600 py-3 px-6 rounded-xl items-center justify-center shadow-md ${sending ? 'opacity-50' : ''}`}
         onPress={sendSOS}
         disabled={sending}
         >
-        <Text style={styles.sosButtonText}>
+       <Text style={tw`text-white text-lg font-bold`}>
             {sending ? "Sending SOS..." : "Send SOS Alert"}
         </Text>
         </TouchableOpacity>
       </View>
 
     </View>
+      </ScrollView>
+
+    </SafeAreaView>
+
   );
 };
 
 export default SosScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  label: {
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#aaa",
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-  },
-  contactItem: {
-    fontSize: 16,
-    paddingVertical: 4,
-  },
-
-  sosButtonContainer: {
-    flex:3,
-  },
-  sosButton: {
-    backgroundColor: '#e32f45',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-    },
-
-    sosButtonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-
-});

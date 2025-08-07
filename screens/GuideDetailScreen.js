@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, Image, ScrollView, Button, Alert } from 'react-native';
+import { View, Text, Image, ScrollView, Button, Alert, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 import { getFirestore, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { UserContext } from "../context/UserContext";// make sure this gives current user info
 import * as Animatable from 'react-native-animatable';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../context/ThemeContext';
 
 const guideBadgeData = {
   guide1: {
@@ -23,6 +25,7 @@ const guideBadgeData = {
 };
 
 const GuideDetailsScreen = ({ route }) => {
+  const { bgColor, textColor, borderColor} = useTheme();
   const {
     id,
     title_en,
@@ -105,20 +108,20 @@ useEffect(() => {
   }
 }, [showBadge]);
 
+  // menu
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [fontSize, setFontSize] = useState(16); // default font size
 
 
   return (
+    <View style={tw`flex-1 relative ${bgColor}`}>
     <ScrollView contentContainerStyle={tw`p-4`}>
-      <View style={tw`flex-row justify-around mb-4`}>
-      <Button title="English" onPress={() => setCurrentLang('en')} />
-      <Button title="தமிழ்" onPress={() => setCurrentLang('ta')} />
-      <Button title="中文" onPress={() => setCurrentLang('zh')} />
-      <Button title="Malay" onPress={() => setCurrentLang('ms')} />
-    </View>
 
-      <Text style={tw`text-xl font-bold mb-3`}>{title}</Text>
+
+      <Text style={tw`text-xl font-bold mb-3 ${textColor}`}>{title}</Text>
       <Image source={image} style={tw`w-full h-48 rounded-lg mb-4`} resizeMode="cover" />
-      <Text style={tw`text-base leading-relaxed`}>{content}</Text>
+      <Text style={[tw`leading-relaxed ${textColor}`, { fontSize }]}>{content}</Text>
+
 
       <View style={tw`mt-6 mb-20`}>
         {completed ? (
@@ -143,6 +146,74 @@ useEffect(() => {
 
 
     </ScrollView>
+
+    {/* -------- Floating Language Button -------- */}
+      <View style={tw`absolute top-5 right-2 z-50 flex-col items-end`}>
+                {/* Floating Circle Button */}
+        <TouchableOpacity
+          onPress={() => setMenuOpen(!menuOpen)}
+              style={tw`bg-gray-400 w-12 h-12 rounded-full justify-center items-center shadow-lg`}
+  >
+          <Ionicons name="accessibility-outline" size={28} color="#000" />
+        </TouchableOpacity>
+        {/* Language Options (expand when menuOpen is true) */}
+        {menuOpen && (
+          <View style={tw`bg-white rounded-xl py-3 px-4 mt-2 shadow-lg`}>
+
+            {/* Text Size Section */}
+            <View style={tw`mb-3`}>
+              <Text style={tw`text-sm font-semibold mb-1`}>Text Size</Text>
+              <View style={tw`flex-row items-center justify-between`}>
+                <TouchableOpacity
+                  onPress={() => setFontSize((prev) => Math.max(12, prev - 2))}
+                  style={tw`bg-gray-300 rounded-full px-3 py-1 mr-2`}
+                >
+                  <Text style={tw`text-lg`}>−</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => setFontSize((prev) => Math.min(30, prev + 2))}
+                  style={tw`bg-gray-300 rounded-full px-3 py-1`}
+                >
+                  <Text style={tw`text-lg`}>+</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Language Selection */}
+            {['en', 'ta', 'zh', 'ms'].map((langCode) => (
+              <TouchableOpacity
+                key={langCode}
+                onPress={() => {
+                  setCurrentLang(langCode);
+                  setMenuOpen(false);
+                }}
+                style={tw.style(
+                  `py-1.5 px-3 rounded-md`,
+                  currentLang === langCode ? 'bg-blue-500' : ''
+                )}
+              >
+                <Text
+                  style={tw.style(
+                    currentLang === langCode ? 'text-white font-bold' : 'text-black'
+                  )}
+                >
+                  {langCode === 'en'
+                    ? 'English'
+                    : langCode === 'ta'
+                    ? 'தமிழ்'
+                    : langCode === 'zh'
+                    ? '中文'
+                    : 'Malay'}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+
+      </View>
+  </View>
 
 
   );
