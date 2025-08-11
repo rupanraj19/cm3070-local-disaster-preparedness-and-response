@@ -8,10 +8,16 @@ import * as Animatable from 'react-native-animatable';
 
 
 const emergencyItems = [
-  { name: 'Water Bottle', image: require('../assets/images/water.png'), isCorrect: true },
-  { name: 'Flashlight', image: require('../assets/images/flashlight.png'), isCorrect: true },
-  { name: 'FirstAidKit', image: require('../assets/images/first-aid-kit.png'), isCorrect: true },
-  { name: 'Chips', image: require('../assets/images/chips.png'), isCorrect: false },
+  { name: 'Water', image: require('../assets/images/games/water.png'), isCorrect: true },
+  { name: 'Flashlight', image: require('../assets/images/games/flashlight.png'), isCorrect: true },
+  { name: 'FirstAid', image: require('../assets/images/first-aid-kit.png'), isCorrect: true },
+  { name: 'Chips', image: require('../assets/images/games/chips.png'), isCorrect: false },
+  { name: 'Medicine', image: require('../assets/images/games/medicine.png'), isCorrect: true },
+  { name: 'Umbrella', image: require('../assets/images/games/umbrella.png'), isCorrect: true },
+  { name: 'Whistle', image: require('../assets/images/games/whistle.png'), isCorrect: true },
+  { name: 'Toys', image: require('../assets/images/games/toys.png'), isCorrect: false },
+  { name: 'Guitar', image: require('../assets/images/games/guitar.png'), isCorrect: false },
+  { name: 'Football', image: require('../assets/images/games/football.png'), isCorrect: false },
 ];
 
 const PackBagGame = ({ navigation }) => {
@@ -51,7 +57,6 @@ const updateLeaderboard = async (username, points) => {
     await setDoc(doc(db, "leaderboard", user.uid), {
       name: username,
       points: points,
-      // Optionally add streak here if you have it
     });
     console.log("Leaderboard updated");
   } catch (err) {
@@ -60,15 +65,28 @@ const updateLeaderboard = async (username, points) => {
 };
 
 const handleSubmit = async () => {
-  const correctCount = selectedItems.filter((name) =>
-    emergencyItems.find((item) => item.name === name && item.isCorrect)
-  );
+  // Start at 0
+  let totalScore = 0;
 
-  const totalScore = correctCount.length * 10;
+  // Loop over all selected items
+  selectedItems.forEach((name) => {
+    const item = emergencyItems.find((i) => i.name === name);
+    if (item) {
+      if (item.isCorrect) {
+        totalScore += 10; // correct item
+      } else {
+        totalScore -= 10; // incorrect item
+      }
+    }
+  });
+
   setScore(totalScore);
 
-  const MAX_SCORE = emergencyItems.filter(item => item.isCorrect).length * 10;
-  const earnedBadge = totalScore === MAX_SCORE;
+  // Check for perfect game: all correct items chosen, and no wrong items
+  const correctItems = emergencyItems.filter((item) => item.isCorrect).map(i => i.name);
+  const earnedBadge =
+    correctItems.every((name) => selectedItems.includes(name)) &&
+    selectedItems.every((name) => correctItems.includes(name));
 
   const db = getFirestore();
   const auth = getAuth();
@@ -84,21 +102,25 @@ const handleSubmit = async () => {
         updates.badges = arrayUnion("PackBagMaster");
       }
 
+      // Update user
       await updateDoc(userRef, updates);
       console.log(`${totalScore} points added`);
 
+      // Get username + updated total points
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data();
       const username = userData.username || 'Unknown';
-      const updatedPoints = (userData.points || 0) + totalScore;
+      const updatedPoints = (userData.points || 0);
 
+      // Update leaderboard
       await updateLeaderboard(username, updatedPoints);
+
     } catch (err) {
       console.error('Error updating Firestore:', err);
     }
   }
 
-  // Navigate to result screen after optional delay
+  // Navigate to result screen
   if (earnedBadge) {
     setTimeout(() => {
       navigation.navigate('PbgResult', {
@@ -112,14 +134,13 @@ const handleSubmit = async () => {
 };
 
 
-
   return (
     <ScrollView>
 
 
-    <View style={tw`p-4 mt-2`}>
+    <View style={tw`p-4 mt-2 mb-40`}>
 
-      <Text style={tw`text-lg text-center mb-2`}>Select the Correct Items:</Text>
+      <Text style={tw`text-lg text-center mb-2`}>Select the 6 Correct Items:</Text>
       {/* Grid of items */}
 <View style={tw`flex-row flex-wrap justify-between`}>
   {emergencyItems.map((item) => {
@@ -136,7 +157,7 @@ const handleSubmit = async () => {
       >
         <Image
           source={item.image}
-          style={tw`w-16 h-16 mb-2`}
+          style={tw`w-16 h-16 mb-1`}
           resizeMode="contain"
         />
         <Text style={tw`text-center text-sm`}>{item.name}</Text>
@@ -155,7 +176,7 @@ const handleSubmit = async () => {
             style={tw.style(
               `absolute w-16 h-16`,
               {
-                bottom: 160, // near the bag image
+                bottom: 180, // near the bag image
                 left: '50%', // tweak as needed
                 zIndex: 50,
               }
@@ -168,12 +189,12 @@ const handleSubmit = async () => {
 
       {/* Bag Image */}
       <Image
-        source={require('../assets/images/duffle-bag.png')}
-        style={tw.style(tw`h-1/2 mt-4 mx-8`, { aspectRatio: 1 })}
+        source={require('../assets/images/games/duffle-bag.png')}
+         style={tw`w-60 h-60 mx-10`}
       />
 
       {/* Selected items list */}
-      <Text style={tw`text-center mt-2`}>Items in bag: {selectedItems.join(', ')}</Text>
+      <Text style={tw`text-center`}>Items in bag: {selectedItems.join(', ')}</Text>
 
       {/* Submit Button */}
       <TouchableOpacity

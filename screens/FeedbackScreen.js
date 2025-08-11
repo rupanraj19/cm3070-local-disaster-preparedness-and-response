@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+import tw from 'twrnc';
 
 const FeedbackScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { bgColor, textColor, borderColor} = useTheme();
 
   const handleSubmit = async () => {
     if (!name || !email || !message) {
@@ -48,86 +51,48 @@ const [isSubmitting, setIsSubmitting] = useState(false);
     }
   };
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Send us a message</Text>
+<ScrollView contentContainerStyle={tw`flex-1 p-4 ${bgColor}`}>
+      <Text style={tw`text-2xl font-bold mt-15 mb-4 self-center ${textColor}`}>Send us a message</Text>
 
-      <Text style={styles.label}>Name</Text>
+      <Text style={tw`mt-3 mb-1 text-base font-semibold ${textColor}`}>Name</Text>
       <TextInput
         value={name}
         onChangeText={setName}
-        style={styles.input}
+        style={tw`bg-white border border-gray-300 px-4 py-2 rounded-md`}
         placeholder="Your name"
       />
 
-      <Text style={styles.label}>Email</Text>
+      <Text style={tw`mt-3 mb-1 text-base font-semibold ${textColor}`}>Email</Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
-        style={styles.input}
+        style={tw`bg-white border border-gray-300 px-4 py-2 rounded-md`}
         placeholder="you@example.com"
         keyboardType="email-address"
         autoCapitalize="none"
       />
 
-      <Text style={styles.label}>Message</Text>
+      <Text style={tw`mt-3 mb-1 text-base font-semibold ${textColor}`}>Message</Text>
       <TextInput
         value={message}
         onChangeText={setMessage}
-        style={[styles.input, styles.messageBox]}
+        style={tw`bg-white border border-gray-300 px-4 py-2 rounded-md h-24 text-top`}
         placeholder="Type your message here"
         multiline
         numberOfLines={4}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
+      <TouchableOpacity
+        style={tw`bg-blue-500 py-3 mt-6 rounded-lg items-center`}
+        onPress={handleSubmit}
+        disabled={isSubmitting}
+      >
+        <Text style={tw`text-white text-base font-bold`}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
 
 export default FeedbackScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 50,
-    padding: 16,
-    backgroundColor: '#f8f8f8',
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    alignSelf: 'center',
-  },
-  label: {
-    marginTop: 12,
-    marginBottom: 4,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 6,
-  },
-  messageBox: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 14,
-    marginTop: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});

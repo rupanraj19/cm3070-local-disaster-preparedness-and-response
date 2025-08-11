@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {useRoute} from "@react-navigation/native"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { quizzes } from '../config/question'
-import { getFirestore, doc, updateDoc, increment, arrayUnion } from 'firebase/firestore';
+import {  getFirestore, doc, updateDoc, increment, arrayUnion, getDoc, setDoc} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import tw from "twrnc"
 import * as Progress from "react-native-progress"
@@ -25,9 +25,9 @@ const Questions = ({navigation}) => {
   const progress = (currentQuestionIndex + 1)/ quizProgress;
 
   // handle next press
-  const handleNext=()=>{
+  const handleNext=async()=>{
     if(currentQuestionIndex === quizQuestions.length-1){
-          const db = getFirestore();
+    const db = getFirestore();
     const auth = getAuth();
     const userId = auth.currentUser?.uid;
 if (userId) {
@@ -43,13 +43,33 @@ if (userId) {
       updates.badges = arrayUnion(badgeName);
     }
 
-    updateDoc(userRef, updates)
-      .then(() => {
+      try {
+        // Update user document
+        await updateDoc(userRef, updates);
         console.log("Points and badge updated");
-      })
-      .catch((err) => {
-        console.error("Error updating user:", err);
-      });
+
+        // Get updated username & points
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const username = userData.username || "Unknown";
+          const updatedPoints = userData.points || 0; // total points after increment
+
+          //  Update leaderboard
+          await setDoc(
+            doc(db, "leaderboard", userId),
+            {
+              name: username,
+              points: updatedPoints
+            },
+            { merge: true }
+          );
+
+          console.log("Leaderboard updated");
+        }
+      } catch (err) {
+        console.error("Error updating user or leaderboard:", err);
+      }
   }
 
 
@@ -61,6 +81,25 @@ if (userId) {
       setIsCorrect(null)
     }
   }
+
+// update leaderboard
+  const updateLeaderboard = async (username, points) => {
+    const db = getFirestore();
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    try {
+      await setDoc(doc(db, "leaderboard", user.uid), {
+        name: username,
+        points: points,
+      });
+      console.log("Leaderboard updated");
+    } catch (err) {
+      console.error("Failed to update leaderboard", err);
+    }
+  };
 
   // handle pressed option
 

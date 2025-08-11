@@ -10,9 +10,13 @@ import { useTheme } from '../context/ThemeContext';
 const badgeImages = {
   PackBagMaster: require('../assets/images/bagbadge.png'),
   floodSafetyQuizMaster: require('../assets/images/high-score.png'),
+  floodAwarenessQuizMaster: require('../assets/images/high-score.png'),
   DisasterAware: require('../assets/images/aware.png'),
   FloodResponder: require('../assets/images/ready.png'),
   KitMaster: require('../assets/images/packbag.png'),
+  EmergencySupplies: require('../assets/images/badges/bagbadge2.png'),
+  DisasterType: require('../assets/images/badges/generalbadge.png'),
+  SafetyConcepts: require('../assets/images/badges/safetybadge.png'),
 };
 
 const ProfileScreen = ({ navigation }) => {

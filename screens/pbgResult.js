@@ -14,7 +14,7 @@ const PbgResult = () => {
 
   // Decide number of stars
   const calculateStars = () => {
-    if (score === 30) return 3;
+    if (score === 60) return 3;
     else if (score >= 20) return 2;
     else if (score >= 10) return 1;
     return 0;

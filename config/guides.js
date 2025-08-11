@@ -69,7 +69,7 @@ Jika anda berada di dalam rumah semasa banjir, matikan bekalan elektrik jika sel
     title_ta: 'அவசரப் பயன்பாட்டு பொருட்கள் பட்டியல்',
     title_zh: '紧急应变包清单',
     title_ms: 'Senarai Semak Kit Kecemasan',
-    image: require('../assets/images/water.png'),
+    image: require('../assets/images/first-aid-box.png'),
     content_en: `An emergency kit is essential during disasters like floods, blackouts, or extended periods of isolation. Your kit should include at least one gallon of water per person per day (for at least 3 days), non-perishable food, and a manual can opener.
 
 Other essentials include a flashlight, spare batteries, power bank, whistle, and a battery-powered or crank radio for updates. Don’t forget hygiene items, masks, hand sanitizer, and a small first aid kit. If you take medication, keep a few days’ supply.
