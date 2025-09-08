@@ -165,6 +165,7 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={tw`text-base text-gray-500`}>{user.points} pts</Text>
           </View>
         ))}
+        <Text style={tw`text-center text-gray-500 mt-4`}>This leaderboard will reset every week :)</Text>
       </View>
     </ScrollView>
     </SafeAreaView>

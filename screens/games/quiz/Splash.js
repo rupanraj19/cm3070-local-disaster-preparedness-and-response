@@ -11,7 +11,7 @@ const Splash = ({ navigation }) => {
   return (
     <View style={tw`flex-1 items-center`}>
         <Image
-        source={require("../assets/images/quiz.png")}
+        source={require("../../../assets/images/quiz.png")}
         style={tw.style(tw`h-50 m-6`, {aspectRatio:1})} />
 
          <Text style={tw`text-2xl text-center mb-6`}>Choose a Quiz</Text>

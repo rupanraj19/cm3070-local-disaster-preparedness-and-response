@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet} from 'react-native'
 import HomeScreen from '../screens/HomeScreen';
-import Splash from '../screens/Splash';
-import Questions from "../screens/Questions"
-import Score from '../screens/Score';
+import Splash from '../screens/games/quiz/Splash';
+import Questions from "../screens/games/quiz/Questions"
+import Score from '../screens/games/quiz/Score';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PackBagGame from '../screens/packBagGame';
-import PbgResult from '../screens/pbgResult'
+import PackBagGame from '../screens/games/packbag/packBagGame';
+import PbgResult from '../screens/games/packbag/pbgResult'
 import GuideDetailScreen from '../screens/GuideDetailScreen';
 import MatchingGameHome from '../screens/games/matchinggame/MatchingGameHome';
 import MatchingGame from '../screens/games/matchinggame/MatchingGame';

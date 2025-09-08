@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpaci
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
+import { signOut } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp} from 'firebase/firestore'
 
 const RegisterScreen = ({ navigation }) => {
@@ -44,6 +45,7 @@ const handleSignUp = async () => {
     console.log('User data saved to Firestore');
 
     alert('Registered successfully!');
+    await auth.signOut();
     navigation.navigate('Login');
   } catch (error) {
     console.error('Registration error:', error.code, error.message);

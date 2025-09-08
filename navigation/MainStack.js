@@ -62,8 +62,8 @@ export default function MainStack() {
             if (userData.isNewUser) {
               console.log('New user detected, updating isNewUser and staying in AuthStack');
               await updateDoc(userRef, { isNewUser: false });
-              setIsNewUser(true);
-              setUser(null);
+              setIsNewUser(false);
+              setUser(user);
             } else {
               setIsNewUser(false);
               setUser(user);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable, Image } from 'react-native';
+import { View, Text} from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import tw from 'twrnc';
@@ -50,7 +50,7 @@ const PbgResult = () => {
         animation="fadeIn"
         duration={800}
         delay={100}
-        source={require('../assets/images/completed.png')}
+        source={require('../../../assets/images/completed.png')}
         style={tw.style(tw`h-2/5 m-4`, { aspectRatio: 1 })}
         resizeMode="contain"
       />
@@ -71,8 +71,8 @@ const PbgResult = () => {
               duration={600}
               source={
                 isFilled
-                  ? require('../assets/images/star-filled.png')
-                  : require('../assets/images/star-empty.png')
+                  ? require('../../../assets/images/star-filled.png')
+                  : require('../../../assets/images/star-empty.png')
               }
               style={tw`w-12 h-12 mx-1`}
               resizeMode="contain"
@@ -86,7 +86,7 @@ const PbgResult = () => {
           <Animatable.Image
             animation="bounceInDown"
             duration={1000}
-            source={require('../assets/images/bagbadge.png')}
+            source={require('../../../assets/images/bagbadge.png')}
             style={tw`w-28 h-28`}
             resizeMode="contain"
           />

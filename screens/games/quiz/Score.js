@@ -5,8 +5,8 @@ import * as Animatable from 'react-native-animatable';
 import tw from 'twrnc';
 
 const badgeImages ={
-  floodsafety: require('../assets/images/floodpro.png'),
-  floodawareness: require('../assets/images/high-score.png')
+  floodsafety: require('../../../assets/images/floodpro.png'),
+  floodawareness: require('../../../assets/images/high-score.png')
 
 }
 
@@ -52,9 +52,6 @@ const Score = ({ navigation }) => {
 
     return () => timeoutIds.forEach(clearTimeout);
   }, []);
-  // console.log("QUIZ TYPE:", quizType);
-  // console.log("BADGE IMAGE EXISTS:", !!badgeImages[quizType]);
-
 
   return (
     <View style={tw`flex-1 items-center bg-white`}>
@@ -62,7 +59,7 @@ const Score = ({ navigation }) => {
         animation="fadeIn"
         duration={800}
         delay={100}
-        source={require('../assets/images/completed.png')}
+        source={require('../../../assets/images/completed.png')}
         style={tw.style(tw`h-2/5 m-4`, { aspectRatio: 1 })}
         resizeMode="contain"
       />
@@ -83,8 +80,8 @@ const Score = ({ navigation }) => {
               duration={600}
               source={
                 isFilled
-                  ? require('../assets/images/star-filled.png')
-                  : require('../assets/images/star-empty.png')
+                  ? require('../../../assets/images/star-filled.png')
+                  : require('../../../assets/images/star-empty.png')
               }
               style={tw`w-12 h-12 mx-1`}
               resizeMode="contain"

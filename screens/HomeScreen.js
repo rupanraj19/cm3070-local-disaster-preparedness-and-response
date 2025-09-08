@@ -69,6 +69,17 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
+      {/* instruction card  */}
+      <View style={tw`${bgColor} rounded-2xl shadow-lg p-4 mb-8 ${borderColor} items-center`}>
+        <Text>The guides and games will be updated weekly :)</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Splash')} // or your quiz screen name
+          style={tw`bg-blue-600 px-4 py-2 rounded mt-2 w-40`}
+        >
+          <Text style={tw`text-white text-center font-bold`}>Take your daily quiz</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Guides Section Card */}
       <View style={tw`${bgColor} rounded-2xl shadow-lg p-4 mb-8 ${borderColor}`}>
         <Text style={tw`text-xl font-bold mb-4 ${textColor}`}>📘 Disaster Guides</Text>

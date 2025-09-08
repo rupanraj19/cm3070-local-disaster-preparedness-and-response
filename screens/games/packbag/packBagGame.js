@@ -8,16 +8,16 @@ import * as Animatable from 'react-native-animatable';
 
 
 const emergencyItems = [
-  { name: 'Water', image: require('../assets/images/games/water.png'), isCorrect: true },
-  { name: 'Flashlight', image: require('../assets/images/games/flashlight.png'), isCorrect: true },
-  { name: 'FirstAid', image: require('../assets/images/first-aid-kit.png'), isCorrect: true },
-  { name: 'Chips', image: require('../assets/images/games/chips.png'), isCorrect: false },
-  { name: 'Medicine', image: require('../assets/images/games/medicine.png'), isCorrect: true },
-  { name: 'Umbrella', image: require('../assets/images/games/umbrella.png'), isCorrect: true },
-  { name: 'Whistle', image: require('../assets/images/games/whistle.png'), isCorrect: true },
-  { name: 'Toys', image: require('../assets/images/games/toys.png'), isCorrect: false },
-  { name: 'Guitar', image: require('../assets/images/games/guitar.png'), isCorrect: false },
-  { name: 'Football', image: require('../assets/images/games/football.png'), isCorrect: false },
+  { name: 'Water', image: require('../../../assets/images/games/water.png'), isCorrect: true },
+  { name: 'Flashlight', image: require('../../../assets/images/games/flashlight.png'), isCorrect: true },
+  { name: 'FirstAid', image: require('../../../assets/images/first-aid-kit.png'), isCorrect: true },
+  { name: 'Chips', image: require('../../../assets/images/games/chips.png'), isCorrect: false },
+  { name: 'Medicine', image: require('../../../assets/images/games/medicine.png'), isCorrect: true },
+  { name: 'Umbrella', image: require('../../../assets/images/games/umbrella.png'), isCorrect: true },
+  { name: 'Whistle', image: require('../../../assets/images/games/whistle.png'), isCorrect: true },
+  { name: 'Toys', image: require('../../../assets/images/games/toys.png'), isCorrect: false },
+  { name: 'Guitar', image: require('../../../assets/images/games/guitar.png'), isCorrect: false },
+  { name: 'Football', image: require('../../../assets/images/games/football.png'), isCorrect: false },
 ];
 
 const PackBagGame = ({ navigation }) => {
@@ -189,7 +189,7 @@ const handleSubmit = async () => {
 
       {/* Bag Image */}
       <Image
-        source={require('../assets/images/games/duffle-bag.png')}
+        source={require('../../../assets/images/games/duffle-bag.png')}
          style={tw`w-60 h-60 mx-10`}
       />
 

@@ -46,9 +46,6 @@ const SettingsScreen = ({ navigation }) => {
           <Ionicons name="arrow-back" size={24} color={isDark ? 'white' : 'black'} />
         </TouchableOpacity>
         <Text style={tw`text-lg font-semibold ${textColor} `}>Settings</Text>
-        <TouchableOpacity>
-          {/* <Text style={tw`text-base text-blue-500`}>Done</Text> */}
-        </TouchableOpacity>
       </View>
 
       <ScrollView style={tw`px-0`}>
