@@ -1,3 +1,4 @@
+// --------------- SOS SCREEN ----------------------------
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert, TouchableOpacity, Switch, SafeAreaView, ScrollView } from "react-native";
 import * as Location from "expo-location";

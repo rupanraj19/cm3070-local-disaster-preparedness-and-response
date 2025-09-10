@@ -1,3 +1,4 @@
+//  ------------------------- QUESTIONS -----------------------------------
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, Pressable } from 'react-native'
 import { useRoute } from '@react-navigation/native'
@@ -44,11 +45,9 @@ const Questions = ({ navigation }) => {
         const saved = await AsyncStorage.getItem(key)
         if (saved) {
           const savedQuestions = JSON.parse(saved)
-          console.log("Loaded cached questions:", savedQuestions.length)
 
-          // ✅ Auto-reset if cache has wrong number of questions
+          // Auto-reset if cache has wrong number of questions
           if (savedQuestions.length !== NUM_QUESTIONS) {
-            console.log("Invalid cache, resetting...")
             await AsyncStorage.removeItem(key)
           } else {
             setQuizQuestions(savedQuestions)
@@ -62,7 +61,6 @@ const Questions = ({ navigation }) => {
         const selected = shuffled.slice(0, NUM_QUESTIONS)
         setQuizQuestions(selected)
         await AsyncStorage.setItem(key, JSON.stringify(selected))
-        console.log("Shuffled and saved today's questions:", selected.length)
 
       } catch (error) {
         console.error("Error loading or saving quiz questions:", error)
@@ -167,4 +165,4 @@ const Questions = ({ navigation }) => {
 
 export default Questions
 
-const styles = StyleSheet.create({})
+

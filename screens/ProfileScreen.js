@@ -1,3 +1,4 @@
+// ------------------- PROFILE SCREEN --------------------------
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { getFirestore, doc, collection, onSnapshot } from 'firebase/firestore';
@@ -39,7 +40,7 @@ const ProfileScreen = ({ navigation }) => {
     const db = getFirestore();
     const userRef = doc(db, 'users', user.uid);
 
-    // 🔄 Realtime listener for user data
+    //Realtime listener for user data
     const unsubscribe = onSnapshot(userRef, (snap) => {
       if (snap.exists()) {
         const data = snap.data();
@@ -165,7 +166,7 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={tw`text-base text-gray-500`}>{user.points} pts</Text>
           </View>
         ))}
-        <Text style={tw`text-center text-gray-500 mt-4`}>This leaderboard will reset every week :)</Text>
+        <Text style={tw`text-center text-gray-500 mt-4`}>This leaderboard will reset every week</Text>
       </View>
     </ScrollView>
     </SafeAreaView>

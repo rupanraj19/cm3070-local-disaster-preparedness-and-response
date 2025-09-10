@@ -1,7 +1,8 @@
+// --------------------------- NOTIFICATIONS SCREEN ------------------------
 import React, { useEffect, useState } from 'react';
 import { View, Text, Switch, Alert, Platform, StyleSheet, ScrollView } from 'react-native';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase'; // your firebase config file
+import { db } from '../firebase'; //firebase config file
 import { getAuth } from 'firebase/auth';
 import * as Notifications from 'expo-notifications';
 import tw from 'twrnc';

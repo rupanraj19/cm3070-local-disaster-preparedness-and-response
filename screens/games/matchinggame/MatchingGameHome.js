@@ -1,7 +1,8 @@
-import React from 'react';
+// --------------------- MATCHING GAME HOME ----------------------------
+
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-// Arrays of items for each category (use your disaster preparedness themed items here)
+// Arrays of items for each category
 const categories = {
   "Emergency Supplies": [
     require('../../../assets/images/games/water.png'),

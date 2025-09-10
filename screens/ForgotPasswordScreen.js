@@ -1,8 +1,9 @@
 // ----------------FORGOT PASSWORD--------------------
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebase';
+import tw from 'twrnc';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -20,75 +21,38 @@ const ForgotPasswordScreen = ({ navigation }) => {
       })
       .catch((error) => {
         if (error.code === 'auth/user-not-found') {
-            Alert.alert("Error", "No account found with that email.");
+          Alert.alert('Error', 'No account found with that email.');
         } else {
-            Alert.alert("Error", error.message);
+          Alert.alert('Error', error.message);
         }
       });
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Reset Your Password</Text>
+    <View style={tw`flex-1 justify-center items-center p-6 bg-white`}>
+      <Text style={tw`text-2xl font-bold mb-6`}>Reset Your Password</Text>
+
       <TextInput
         placeholder="Enter your email"
         value={email}
         onChangeText={setEmail}
-        style={styles.input}
+        style={tw`w-full bg-gray-200 p-3 rounded-lg mb-4`}
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      <TouchableOpacity onPress={handlePasswordReset} style={styles.button}>
-        <Text style={styles.buttonText}>Send Reset Email</Text>
+
+      <TouchableOpacity
+        onPress={handlePasswordReset}
+        style={tw`bg-blue-500 py-4 rounded-lg w-full items-center mb-2`}
+      >
+        <Text style={tw`text-white font-bold text-base`}>Send Reset Email</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.link}>
-        <Text style={styles.linkText}>Back to Login</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={tw`mt-3`}>
+        <Text style={tw`text-blue-500 text-sm`}>Back to Login</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 export default ForgotPasswordScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 24,
-    fontWeight: 'bold',
-  },
-  input: {
-    width: '100%',
-    backgroundColor: '#f2f2f2',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  button: {
-    backgroundColor: '#0782f9',
-    padding: 15,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  link: {
-    marginTop: 10,
-  },
-  linkText: {
-    color: '#0782f9',
-    fontSize: 14,
-  },
-});

@@ -1,3 +1,4 @@
+// ---------------------- GAMES -----------------------
 export const games = [
   {
     id: "quiz",
@@ -8,7 +9,7 @@ export const games = [
   {
     id: "packBag",
     title: "Pack the Emergency Kit Bag",
-    image: require("../assets/images/first-aid-box.png"),
+    image: require("../assets/images/first-aid-kit.png"),
     screenName: "Emergency Bag Pack",
   },
   {
@@ -17,5 +18,4 @@ export const games = [
     image: require("../assets/images/puzzle.png"),
     screenName: "Memory Game Home"
   }
-  // Add more games as needed
 ];

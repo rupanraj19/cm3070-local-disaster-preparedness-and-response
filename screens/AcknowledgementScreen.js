@@ -1,3 +1,4 @@
+// ------------------- ACKNOWLEDGEMENT SCREEN -------------------------
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
@@ -51,4 +52,3 @@ const AcknowledgementScreen = () => {
 
 export default AcknowledgementScreen;
 
-const styles = StyleSheet.create({});

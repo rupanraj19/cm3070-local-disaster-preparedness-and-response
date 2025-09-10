@@ -1,4 +1,4 @@
-
+//  --------------- MATCHING GAME SCORE --------------------------------
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';

@@ -1,7 +1,6 @@
-// --------------PROFILE STACK----------------
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// --------------PROFILESTACK----------------
 
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProfileScreen from '../screens/ProfileScreen';
 import UpdatePasswordScreen from '../screens/UpdatePasswordScreen';
 import SettingsScreen from '../screens/SettingsScreen'

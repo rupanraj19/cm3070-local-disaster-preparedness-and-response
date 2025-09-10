@@ -1,3 +1,4 @@
+//  ------------------- SCORE ---------------------------
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';

@@ -1,4 +1,4 @@
-//generateFloodBotResponse.js
+//---------------------------------- BOT RESPONSE ---------------------------------
 export function generateFloodBotResponse(message) {
   const lower = message.toLowerCase();
 

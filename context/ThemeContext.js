@@ -1,4 +1,5 @@
-// context/ThemeContext.js
+//  ------------------- THEMECONTEXT ------------------------
+
 import React, { createContext, useContext, useState } from 'react';
 
 const ThemeContext = createContext();
@@ -7,7 +8,7 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
   const isDark = theme === 'dark';
 
-  // Compute your styles once here:
+  // Compute styleS here:
   const bgColor = isDark ? 'bg-black' : 'bg-white';
   const textColor = isDark ? 'text-white' : 'text-black';
   const borderColor = isDark ? 'border-2 border-white' : 'border-black';

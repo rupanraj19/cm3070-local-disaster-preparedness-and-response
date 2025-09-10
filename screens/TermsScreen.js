@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import React from 'react';
+// ------------- TERMS SCREEN -------------------
+import { Text, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import { useTheme } from '../context/ThemeContext';
 
@@ -9,7 +9,7 @@ const TermsScreen = () => {
   return (
     <ScrollView style={tw`px-4 py-6 ${bgColor}`}>
       <Text style={tw`mb-4 text-base ${textColor}`}>
-        Please read these terms and conditions ("Terms") carefully before using the FloodSafe SG mobile application ("App").
+        Please read these terms and conditions carefully before using the FloodSafe SG mobile application.
       </Text>
 
       <Text style={tw`font-bold mb-2 ${textColor}`}>1. Acceptance of Terms</Text>
@@ -47,4 +47,3 @@ const TermsScreen = () => {
 
 export default TermsScreen;
 
-const styles = StyleSheet.create({});

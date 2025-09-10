@@ -29,8 +29,6 @@ const LoginScreen = ({ navigation }) => {
     scheme: 'floodsafe_sg', // For standalone builds
   });
 
-  console.log('Generated redirectUri:', redirectUri);
-  console.log(AuthSession.makeRedirectUri({ useProxy: true }));
 
   // Google Auth Request using Expo AuthSession
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
@@ -45,7 +43,6 @@ const LoginScreen = ({ navigation }) => {
   // Listen for Google Sign-In response
   React.useEffect(() => {
     if (response) {
-      console.log('AuthSession response:', response);
       if (response.type === 'success') {
         handleGoogleSignIn(response.params.id_token);
       } else if (response.type === 'error') {
@@ -65,19 +62,14 @@ const LoginScreen = ({ navigation }) => {
     try {
       let email = emailOrUsername;
       if (!emailOrUsername.includes('@')) {
-        console.log('Looking up username:', emailOrUsername);
         const usernameDoc = await getDoc(doc(db, 'usernames', emailOrUsername.toLowerCase()));
         if (!usernameDoc.exists()) {
           alert('Username not found');
           return;
         }
         email = usernameDoc.data().email;
-        console.log('Found email for username:', email);
       }
-
-      console.log('Attempting to log in with email:', email);
       await signInWithEmailAndPassword(auth, email, password);
-      console.log('User logged in successfully');
     } catch (error) {
       console.error('Login error:', error.code, error.message);
       alert(`Error: ${error.message}`);
@@ -87,11 +79,9 @@ const LoginScreen = ({ navigation }) => {
   // Handle login using Google Sign-In
   const handleGoogleSignIn = async (idToken) => {
     try {
-      console.log('Processing Google Sign-In with idToken');
       const googleCredential = GoogleAuthProvider.credential(idToken);
       const userCredential = await signInWithCredential(auth, googleCredential);
       const user = userCredential.user;
-      console.log('Google Sign-In successful:', user.email);
 
       // Check if user exists in Firestore
       const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -136,13 +126,10 @@ const LoginScreen = ({ navigation }) => {
                   uid: user.uid,
                   email: user.email,
                 });
-                console.log('New user saved with username:', username);
               },
             },
           ]
         );
-      } else {
-        console.log('Existing user, navigating to Tabs');
       }
     } catch (error) {
       console.error('Google Sign-In error:', error.code, error.message);
@@ -207,7 +194,6 @@ const LoginScreen = ({ navigation }) => {
             style={{width: '100%'}}
             onPress={()=>promptAsync()}
           >
-            {/* <Text style={styles.btnText}>Sign in with Google</Text> */}
             <SocialIcon
             title="Sign In With Google"
             button

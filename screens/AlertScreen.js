@@ -1,71 +1,267 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Switch, Dimensions } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import tw from 'twrnc'
-import { useTheme } from '../context/ThemeContext';
-import { StatusBar } from 'expo-status-bar';
+// ----------------------------- ALERTSCREEN ----------------------------
+import React, { useEffect, useState, useMemo } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  SafeAreaView,
+  Switch,
+  Dimensions,
+} from "react-native";
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import tw from "twrnc";
+import { useTheme } from "../context/ThemeContext";
 
 const STATIC_STATIONS = [
-  { id: 'S224', name: 'Airport Boulevard', latitude: 1.34392, longitude: 103.98409 },
-  { id: 'S77', name: 'Alexandra Road', latitude: 1.2937, longitude: 103.8125 },
-  { id: 'S216', name: 'Ang Mo Kio Avenue 10', latitude: 1.36019, longitude: 103.85335 },
-  { id: 'S109', name: 'Ang Mo Kio Avenue 5', latitude: 1.3764, longitude: 103.8492 },
-  { id: 'S117', name: 'Banyan Road', latitude: 1.256, longitude: 103.679 },
-  { id: 'S217', name: 'Bishan Street 13', latitude: 1.35041, longitude: 103.85526 },
-  { id: 'S64', name: 'Bukit Panjang Road', latitude: 1.3824, longitude: 103.7603 },
-  { id: 'S90', name: 'Bukit Timah Road', latitude: 1.3191, longitude: 103.8191 },
-  { id: 'S208', name: 'Changi East Close', latitude: 1.3136, longitude: 104.00317 },
-  { id: 'S201', name: 'Clementi Park', latitude: 1.32311, longitude: 103.76714 },
-  { id: 'S50', name: 'Clementi Road', latitude: 1.3337, longitude: 103.7768 },
-  { id: 'S220', name: 'Compassvale Lane', latitude: 1.38666, longitude: 103.89797 },
-  { id: 'S213', name: 'Coronation Walk', latitude: 1.32427, longitude: 103.8097 },
-  { id: 'S107', name: 'East Coast Parkway', latitude: 1.3135, longitude: 103.9625 },
-  { id: 'S215', name: 'Geylang East Central', latitude: 1.32785, longitude: 103.88899 },
-  { id: 'S222', name: 'Henderson Road', latitude: 1.28987, longitude: 103.82364 },
-  { id: 'S221', name: 'Hougang Avenue 1', latitude: 1.35691, longitude: 103.89088 },
-  { id: 'S33', name: 'Jurong Pier Road', latitude: 1.3081, longitude: 103.71 },
-  { id: 'S229', name: 'Jurong West Street 42', latitude: 1.35167, longitude: 103.72195 },
-  { id: 'S228', name: 'Jurong West Street 73', latitude: 1.34703, longitude: 103.70073 },
-  { id: 'S71', name: 'Kent Ridge Road', latitude: 1.2923, longitude: 103.7815 },
-  { id: 'S43', name: 'Kim Chuan Road', latitude: 1.3399, longitude: 103.8878 },
-  { id: 'S211', name: 'Kranji Road', latitude: 1.42918, longitude: 103.75711 },
-  { id: 'S66', name: 'Kranji Way', latitude: 1.4387, longitude: 103.7363 },
-  { id: 'S112', name: 'Lim Chu Kang Road', latitude: 1.43854, longitude: 103.70131 },
-  { id: 'S07', name: 'Lornie Road', latitude: 1.3415, longitude: 103.8334 },
-  { id: 'S226', name: 'Malan Road', latitude: 1.27472, longitude: 103.80389 },
-  { id: 'S40', name: 'Mandai Lake Road', latitude: 1.4044, longitude: 103.78962 },
-  { id: 'S223', name: 'Margaret Drive', latitude: 1.29984, longitude: 103.80264 },
-  { id: 'S108', name: 'Marina Gardens Drive', latitude: 1.2799, longitude: 103.8703 },
-  { id: 'S113', name: 'Marine Parade Road', latitude: 1.30648, longitude: 103.9104 },
-  { id: 'S44', name: 'Nanyang Avenue', latitude: 1.34583, longitude: 103.68166 },
-  { id: 'S119', name: 'Nicoll Highway', latitude: 1.30105, longitude: 103.8666 },
-  { id: 'S203', name: 'Pasir Panjang', latitude: 1.29164, longitude: 103.7702 },
-  { id: 'S29', name: 'Pasir Ris Drive 12', latitude: 1.387, longitude: 103.935 },
-  { id: 'S94', name: 'Pasir Ris Street 51', latitude: 1.3662, longitude: 103.9528 },
-  { id: 'S78', name: 'Poole Road', latitude: 1.30703, longitude: 103.89067 },
-  { id: 'S106', name: 'Pulau Ubin', latitude: 1.4168, longitude: 103.9673 },
-  { id: 'S81', name: 'Punggol Central', latitude: 1.4029, longitude: 103.9092 },
-  { id: 'S111', name: 'Scotts Road', latitude: 1.31055, longitude: 103.8365 },
-  { id: 'S900', name: 'Seletar Aerospace View', latitude: 1.41284, longitude: 103.86922 },
-  { id: 'S102', name: 'Semakau Landfill', latitude: 1.189, longitude: 103.768 },
-  { id: 'S60', name: 'Sentosa', latitude: 1.25, longitude: 103.8279 },
-  { id: 'S84', name: 'Simei Avenue', latitude: 1.3437, longitude: 103.9444 },
-  { id: 'S79', name: 'Somerset Road', latitude: 1.3004, longitude: 103.8372 },
-  { id: 'S92', name: 'South Buona Vista Road', latitude: 1.2841, longitude: 103.7886 },
-  { id: 'S214', name: 'Tanjong Rhu', latitude: 1.29911, longitude: 103.88289 },
-  { id: 'S88', name: 'Toa Payoh North', latitude: 1.3427, longitude: 103.8482 },
-  { id: 'S123', name: 'Towner Road', latitude: 1.3214, longitude: 103.8577 },
-  { id: 'S115', name: 'Tuas South Avenue 3', latitude: 1.29377, longitude: 103.61843 },
-  { id: 'S24', name: 'Upper Changi Road North', latitude: 1.3678, longitude: 103.9826 },
-  { id: 'S69', name: 'Upper Peirce Reservoir Park', latitude: 1.37, longitude: 103.805 },
-  { id: 'S08', name: 'Upper Thomson Road', latitude: 1.3701, longitude: 103.8271 },
-  { id: 'S230', name: 'West Coast Road', latitude: 1.30167, longitude: 103.76444 },
-  { id: 'S104', name: 'Woodlands Avenue 9', latitude: 1.44387, longitude: 103.78538 },
-  { id: 'S210', name: 'Woodlands Centre', latitude: 1.44003, longitude: 103.76904 },
-  { id: 'S227', name: 'Woodlands Drive 62', latitude: 1.43944, longitude: 103.80389 },
-  { id: 'S219', name: 'Yio Chu Kang Road', latitude: 1.37999, longitude: 103.87643 },
-  { id: 'S209', name: 'Yishun Ring Road', latitude: 1.42111, longitude: 103.84472 },
+  {
+    id: "S224",
+    name: "Airport Boulevard",
+    latitude: 1.34392,
+    longitude: 103.98409,
+  },
+  { id: "S77", name: "Alexandra Road", latitude: 1.2937, longitude: 103.8125 },
+  {
+    id: "S216",
+    name: "Ang Mo Kio Avenue 10",
+    latitude: 1.36019,
+    longitude: 103.85335,
+  },
+  {
+    id: "S109",
+    name: "Ang Mo Kio Avenue 5",
+    latitude: 1.3764,
+    longitude: 103.8492,
+  },
+  { id: "S117", name: "Banyan Road", latitude: 1.256, longitude: 103.679 },
+  {
+    id: "S217",
+    name: "Bishan Street 13",
+    latitude: 1.35041,
+    longitude: 103.85526,
+  },
+  {
+    id: "S64",
+    name: "Bukit Panjang Road",
+    latitude: 1.3824,
+    longitude: 103.7603,
+  },
+  {
+    id: "S90",
+    name: "Bukit Timah Road",
+    latitude: 1.3191,
+    longitude: 103.8191,
+  },
+  {
+    id: "S208",
+    name: "Changi East Close",
+    latitude: 1.3136,
+    longitude: 104.00317,
+  },
+  {
+    id: "S201",
+    name: "Clementi Park",
+    latitude: 1.32311,
+    longitude: 103.76714,
+  },
+  { id: "S50", name: "Clementi Road", latitude: 1.3337, longitude: 103.7768 },
+  {
+    id: "S220",
+    name: "Compassvale Lane",
+    latitude: 1.38666,
+    longitude: 103.89797,
+  },
+  {
+    id: "S213",
+    name: "Coronation Walk",
+    latitude: 1.32427,
+    longitude: 103.8097,
+  },
+  {
+    id: "S107",
+    name: "East Coast Parkway",
+    latitude: 1.3135,
+    longitude: 103.9625,
+  },
+  {
+    id: "S215",
+    name: "Geylang East Central",
+    latitude: 1.32785,
+    longitude: 103.88899,
+  },
+  {
+    id: "S222",
+    name: "Henderson Road",
+    latitude: 1.28987,
+    longitude: 103.82364,
+  },
+  {
+    id: "S221",
+    name: "Hougang Avenue 1",
+    latitude: 1.35691,
+    longitude: 103.89088,
+  },
+  { id: "S33", name: "Jurong Pier Road", latitude: 1.3081, longitude: 103.71 },
+  {
+    id: "S229",
+    name: "Jurong West Street 42",
+    latitude: 1.35167,
+    longitude: 103.72195,
+  },
+  {
+    id: "S228",
+    name: "Jurong West Street 73",
+    latitude: 1.34703,
+    longitude: 103.70073,
+  },
+  { id: "S71", name: "Kent Ridge Road", latitude: 1.2923, longitude: 103.7815 },
+  { id: "S43", name: "Kim Chuan Road", latitude: 1.3399, longitude: 103.8878 },
+  { id: "S211", name: "Kranji Road", latitude: 1.42918, longitude: 103.75711 },
+  { id: "S66", name: "Kranji Way", latitude: 1.4387, longitude: 103.7363 },
+  {
+    id: "S112",
+    name: "Lim Chu Kang Road",
+    latitude: 1.43854,
+    longitude: 103.70131,
+  },
+  { id: "S07", name: "Lornie Road", latitude: 1.3415, longitude: 103.8334 },
+  { id: "S226", name: "Malan Road", latitude: 1.27472, longitude: 103.80389 },
+  {
+    id: "S40",
+    name: "Mandai Lake Road",
+    latitude: 1.4044,
+    longitude: 103.78962,
+  },
+  {
+    id: "S223",
+    name: "Margaret Drive",
+    latitude: 1.29984,
+    longitude: 103.80264,
+  },
+  {
+    id: "S108",
+    name: "Marina Gardens Drive",
+    latitude: 1.2799,
+    longitude: 103.8703,
+  },
+  {
+    id: "S113",
+    name: "Marine Parade Road",
+    latitude: 1.30648,
+    longitude: 103.9104,
+  },
+  {
+    id: "S44",
+    name: "Nanyang Avenue",
+    latitude: 1.34583,
+    longitude: 103.68166,
+  },
+  {
+    id: "S119",
+    name: "Nicoll Highway",
+    latitude: 1.30105,
+    longitude: 103.8666,
+  },
+  { id: "S203", name: "Pasir Panjang", latitude: 1.29164, longitude: 103.7702 },
+  {
+    id: "S29",
+    name: "Pasir Ris Drive 12",
+    latitude: 1.387,
+    longitude: 103.935,
+  },
+  {
+    id: "S94",
+    name: "Pasir Ris Street 51",
+    latitude: 1.3662,
+    longitude: 103.9528,
+  },
+  { id: "S78", name: "Poole Road", latitude: 1.30703, longitude: 103.89067 },
+  { id: "S106", name: "Pulau Ubin", latitude: 1.4168, longitude: 103.9673 },
+  { id: "S81", name: "Punggol Central", latitude: 1.4029, longitude: 103.9092 },
+  { id: "S111", name: "Scotts Road", latitude: 1.31055, longitude: 103.8365 },
+  {
+    id: "S900",
+    name: "Seletar Aerospace View",
+    latitude: 1.41284,
+    longitude: 103.86922,
+  },
+  { id: "S102", name: "Semakau Landfill", latitude: 1.189, longitude: 103.768 },
+  { id: "S60", name: "Sentosa", latitude: 1.25, longitude: 103.8279 },
+  { id: "S84", name: "Simei Avenue", latitude: 1.3437, longitude: 103.9444 },
+  { id: "S79", name: "Somerset Road", latitude: 1.3004, longitude: 103.8372 },
+  {
+    id: "S92",
+    name: "South Buona Vista Road",
+    latitude: 1.2841,
+    longitude: 103.7886,
+  },
+  { id: "S214", name: "Tanjong Rhu", latitude: 1.29911, longitude: 103.88289 },
+  { id: "S88", name: "Toa Payoh North", latitude: 1.3427, longitude: 103.8482 },
+  { id: "S123", name: "Towner Road", latitude: 1.3214, longitude: 103.8577 },
+  {
+    id: "S115",
+    name: "Tuas South Avenue 3",
+    latitude: 1.29377,
+    longitude: 103.61843,
+  },
+  {
+    id: "S24",
+    name: "Upper Changi Road North",
+    latitude: 1.3678,
+    longitude: 103.9826,
+  },
+  {
+    id: "S69",
+    name: "Upper Peirce Reservoir Park",
+    latitude: 1.37,
+    longitude: 103.805,
+  },
+  {
+    id: "S08",
+    name: "Upper Thomson Road",
+    latitude: 1.3701,
+    longitude: 103.8271,
+  },
+  {
+    id: "S230",
+    name: "West Coast Road",
+    latitude: 1.30167,
+    longitude: 103.76444,
+  },
+  {
+    id: "S104",
+    name: "Woodlands Avenue 9",
+    latitude: 1.44387,
+    longitude: 103.78538,
+  },
+  {
+    id: "S210",
+    name: "Woodlands Centre",
+    latitude: 1.44003,
+    longitude: 103.76904,
+  },
+  {
+    id: "S227",
+    name: "Woodlands Drive 62",
+    latitude: 1.43944,
+    longitude: 103.80389,
+  },
+  {
+    id: "S219",
+    name: "Yio Chu Kang Road",
+    latitude: 1.37999,
+    longitude: 103.87643,
+  },
+  {
+    id: "S209",
+    name: "Yishun Ring Road",
+    latitude: 1.42111,
+    longitude: 103.84472,
+  },
 ];
 
 const AlertsScreen = ({ navigation }) => {
@@ -77,18 +273,17 @@ const AlertsScreen = ({ navigation }) => {
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [affectedAreas, setAffectedAreas] = useState([]);
-  const { bgColor, textColor,borderColor} = useTheme();
+  const { bgColor, textColor, borderColor } = useTheme();
 
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'Location permission is required.');
+      if (status !== "granted") {
+        Alert.alert("Permission Denied", "Location permission is required.");
         return;
       }
 
       const loc = await Location.getCurrentPositionAsync({});
-      console.log('Location:', loc.coords);
       setLocation(loc.coords);
       fetchWeatherData(loc.coords.latitude, loc.coords.longitude);
     })();
@@ -98,12 +293,14 @@ const AlertsScreen = ({ navigation }) => {
     const fetchRainfallData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://api.data.gov.sg/v1/environment/rainfall');
+        const response = await fetch(
+          "https://api.data.gov.sg/v1/environment/rainfall"
+        );
         const data = await response.json();
 
         const readings = data.items[0].readings;
-        const stationData = STATIC_STATIONS.map(station => {
-          const reading = readings.find(r => r.station_id === station.id);
+        const stationData = STATIC_STATIONS.map((station) => {
+          const reading = readings.find((r) => r.station_id === station.id);
           return {
             ...station,
             value: reading ? reading.value : 0,
@@ -113,25 +310,36 @@ const AlertsScreen = ({ navigation }) => {
         });
 
         setRainStations(stationData);
-        const heavyRainExists = stationData.some(station => station.isHeavyRain);
+        const heavyRainExists = stationData.some(
+          (station) => station.isHeavyRain
+        );
         setHeavyRain(heavyRainExists);
 
         const affectedRegions = stationData
-          .filter(station => station.isFloodRisk)
-          .map(station => ({
+          .filter((station) => station.isFloodRisk)
+          .map((station) => ({
             id: station.id,
             name: station.name,
             coordinates: [
               { latitude: station.latitude, longitude: station.longitude },
-              { latitude: station.latitude + 0.01, longitude: station.longitude },
-              { latitude: station.latitude, longitude: station.longitude + 0.01 },
-              { latitude: station.latitude - 0.01, longitude: station.longitude },
+              {
+                latitude: station.latitude + 0.01,
+                longitude: station.longitude,
+              },
+              {
+                latitude: station.latitude,
+                longitude: station.longitude + 0.01,
+              },
+              {
+                latitude: station.latitude - 0.01,
+                longitude: station.longitude,
+              },
             ],
           }));
         setAffectedAreas(affectedRegions);
       } catch (error) {
-        console.error('Error fetching rainfall data:', error);
-        Alert.alert('Error', 'Unable to fetch rainfall data.');
+        console.error("Error fetching rainfall data:", error);
+        Alert.alert("Error", "Unable to fetch rainfall data.");
       } finally {
         setLoading(false);
       }
@@ -145,23 +353,22 @@ const AlertsScreen = ({ navigation }) => {
   const fetchWeatherData = async (latitude, longitude) => {
     try {
       setWeatherLoading(true);
-      const apiKey = '41cc19554efb3d7751df67f9bd90f730';
+      const apiKey = "41cc19554efb3d7751df67f9bd90f730";
       const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('API error:', errorData);
-        throw new Error(errorData.message || 'Failed to fetch weather data');
+        console.error("API error:", errorData);
+        throw new Error(errorData.message || "Failed to fetch weather data");
       }
       const data = await response.json();
-      console.log('OpenWeather data:', data);
       if (data.cod && data.cod !== 200) {
-        throw new Error(data.message || 'Unknown API error');
+        throw new Error(data.message || "Unknown API error");
       }
       setWeather(data);
     } catch (error) {
-      console.error('Error fetching weather data:', error.message);
-      Alert.alert('Error', `Unable to fetch weather data: ${error.message}`);
+      console.error("Error fetching weather data:", error.message);
+      Alert.alert("Error", `Unable to fetch weather data: ${error.message}`);
     } finally {
       setWeatherLoading(false);
     }
@@ -169,18 +376,23 @@ const AlertsScreen = ({ navigation }) => {
 
   const markers = useMemo(() => {
     const baseMarkers = location
-      ? [{
-          key: 'user-location',
-          coordinate: { latitude: location.latitude, longitude: location.longitude },
-          title: 'You are here',
-          pinColor: 'red',
-        }]
+      ? [
+          {
+            key: "user-location",
+            coordinate: {
+              latitude: location.latitude,
+              longitude: location.longitude,
+            },
+            title: "You are here",
+            pinColor: "red",
+          },
+        ]
       : [];
 
     if (!showStations) return baseMarkers;
 
-    const stationMarkers = STATIC_STATIONS.map(station => {
-      const rainStation = rainStations.find(r => r.id === station.id);
+    const stationMarkers = STATIC_STATIONS.map((station) => {
+      const rainStation = rainStations.find((r) => r.id === station.id);
       return {
         key: `station-${station.id}`,
         coordinate: {
@@ -190,11 +402,11 @@ const AlertsScreen = ({ navigation }) => {
         title: station.name,
         pinColor: rainStation
           ? rainStation.value >= 20
-            ? 'red'
+            ? "red"
             : rainStation.value >= 10
-            ? 'yellow'
-            : 'green'
-          : 'gray',
+            ? "yellow"
+            : "green"
+          : "gray",
       };
     });
 
@@ -203,14 +415,20 @@ const AlertsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={tw`${bgColor}`}>
-      <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Alert</Text>
+      <Text
+        style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}
+      >
+        Alert
+      </Text>
       <ScrollView>
         <View style={tw`flex-1 pt-5 px-4 ${bgColor} pb-12`}>
-        <Text style={tw`text-xl font-bold mb-2 text-center ${textColor}`}>Flood & Weather Alerts</Text>
-    {/* Map container */}
-           <View style={tw`mb-4`}>
+          <Text style={tw`text-xl font-bold mb-2 text-center ${textColor}`}>
+            Flood & Weather Alerts
+          </Text>
+          {/* Map container */}
+          <View style={tw`mb-4`}>
             <MapView
-              key={showStations + rainStations.map(r => r.value).join(',')} // force re-render if data changes
+              key={showStations + rainStations.map((r) => r.value).join(",")} // force re-render if data changes
               style={styles.map}
               region={{
                 latitude: location ? location.latitude : 1.3521,
@@ -219,7 +437,7 @@ const AlertsScreen = ({ navigation }) => {
                 longitudeDelta: 0.1,
               }}
             >
-              {markers.map(marker => (
+              {markers.map((marker) => (
                 <Marker
                   key={marker.key}
                   coordinate={marker.coordinate}
@@ -229,57 +447,82 @@ const AlertsScreen = ({ navigation }) => {
               ))}
             </MapView>
 
- <View style={tw`mt-2 mb-2`}>
-      <View style={tw`flex-row items-center justify-between my-1`}>
-        <Text style={tw`text-sm ${textColor}`}>Show Stations</Text>
+            <View style={tw`mt-2 mb-2`}>
+              <View style={tw`flex-row items-center justify-between my-1`}>
+                <Text style={tw`text-sm ${textColor}`}>Show Stations</Text>
                 <Switch
                   onValueChange={setShowStations}
                   value={showStations}
-                  trackColor={{ false: '#767577', true: '#81b0ff' }}
-                  thumbColor={showStations ? '#f4f3f4' : '#f4f3f4'}
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                  thumbColor={showStations ? "#f4f3f4" : "#f4f3f4"}
                 />
               </View>
             </View>
 
-             <Text style={tw`text-xs text-gray-500 text-center mt-1`}>
+            <Text style={tw`text-xs text-gray-500 text-center mt-1`}>
               Rainfall Intensity (mm): Green &lt; 10, Yellow 10–20, Red &gt; 20
             </Text>
           </View>
 
-           {/* Weather Section */}
-  <View style={tw`mb-4 p-2 ${borderColor} rounded bg-blue-300`}>
-    <Text style={tw`text-lg font-bold mb-2 text-center`}>Current Weather</Text>
+          {/* Weather Section */}
+          <View style={tw`mb-4 p-2 ${borderColor} rounded bg-blue-300`}>
+            <Text style={tw`text-lg font-bold mb-2 text-center`}>
+              Current Weather
+            </Text>
             {weatherLoading ? (
               <ActivityIndicator size="small" color="#007AFF" />
-            ) : weather && weather.main && weather.weather && weather.weather.length > 0 ? (
+            ) : weather &&
+              weather.main &&
+              weather.weather &&
+              weather.weather.length > 0 ? (
               <View style={styles.weatherInfo}>
-                <Text style={styles.weatherText}>🌡 Temperature: {weather.main.temp} °C</Text>
-                <Text style={styles.weatherText}>☁️ Condition: {weather.weather[0].description}</Text>
-                <Text style={styles.weatherText}>💨 Wind Speed: {weather.wind.speed} m/s</Text>
-                <Text style={styles.weatherText}>💧 Humidity: {weather.main.humidity}%</Text>
+                <Text style={styles.weatherText}>
+                  🌡 Temperature: {weather.main.temp} °C
+                </Text>
+                <Text style={styles.weatherText}>
+                  ☁️ Condition: {weather.weather[0].description}
+                </Text>
+                <Text style={styles.weatherText}>
+                  💨 Wind Speed: {weather.wind.speed} m/s
+                </Text>
+                <Text style={styles.weatherText}>
+                  💧 Humidity: {weather.main.humidity}%
+                </Text>
               </View>
             ) : (
-              <Text style={tw`text-base text-center`}>No weather data available.</Text>
+              <Text style={tw`text-base text-center`}>
+                No weather data available.
+              </Text>
             )}
           </View>
 
-            {/* Alerts */}
-  <View style={tw`mb-4 p-2 border border-gray-300 rounded bg-gray-100`}>
-    <Text style={tw`text-lg font-bold mb-2 text-center`}>Weather Alerts (NEA)</Text>
+          {/* Alerts */}
+          <View style={tw`mb-4 p-2 border border-gray-300 rounded bg-gray-100`}>
+            <Text style={tw`text-lg font-bold mb-2 text-center`}>
+              Weather Alerts (NEA)
+            </Text>
             {loading ? (
               <ActivityIndicator size="small" color="#007AFF" />
             ) : (
               <>
-        <View style={tw`flex-row justify-between my-1`}>
-          <Text style={tw`text-base`}>Heavy Rain:</Text>
-          <Text style={tw`text-base font-bold ${heavyRain ? 'text-red-500' : 'text-green-600'}`}>
-                    {heavyRain ? 'Yes' : 'No'}
+                <View style={tw`flex-row justify-between my-1`}>
+                  <Text style={tw`text-base`}>Heavy Rain:</Text>
+                  <Text
+                    style={tw`text-base font-bold ${
+                      heavyRain ? "text-red-500" : "text-green-600"
+                    }`}
+                  >
+                    {heavyRain ? "Yes" : "No"}
                   </Text>
                 </View>
-        <View style={tw`flex-row justify-between my-1`}>
-          <Text style={tw`text-base`}>Flood Warning:</Text>
-          <Text style={tw`text-base font-bold ${heavyRain ? 'text-red-500' : 'text-green-600'}`}>
-                    {heavyRain ? 'Yes' : 'No'}
+                <View style={tw`flex-row justify-between my-1`}>
+                  <Text style={tw`text-base`}>Flood Warning:</Text>
+                  <Text
+                    style={tw`text-base font-bold ${
+                      heavyRain ? "text-red-500" : "text-green-600"
+                    }`}
+                  >
+                    {heavyRain ? "Yes" : "No"}
                   </Text>
                 </View>
               </>
@@ -287,20 +530,39 @@ const AlertsScreen = ({ navigation }) => {
           </View>
 
           {showStations && (
-    <View style={tw`mb-4`}>
-      <View style={tw`flex-row justify-between py-1 ${borderColor}`}>
-        <Text style={tw`flex-3 text-sm font-bold ${textColor}`}>Station</Text>
-        <Text style={tw`flex-2 text-sm text-center font-bold ${textColor}`}>Rainfall (mm)</Text>
-        <Text style={tw`flex-2 text-sm text-center font-bold ${textColor}`}>Status</Text>
+            <View style={tw`mb-4`}>
+              <View style={tw`flex-row justify-between py-1 ${borderColor}`}>
+                <Text style={tw`flex-3 text-sm font-bold ${textColor}`}>
+                  Station
+                </Text>
+                <Text
+                  style={tw`flex-2 text-sm text-center font-bold ${textColor}`}
+                >
+                  Rainfall (mm)
+                </Text>
+                <Text
+                  style={tw`flex-2 text-sm text-center font-bold ${textColor}`}
+                >
+                  Status
+                </Text>
               </View>
               {rainStations.map((station) => (
-                <View key={station.id} style={tw`flex-row justify-between py-1 border-b border-gray-100`}>
-          <Text style={tw`flex-3 text-sm ${textColor}`}>{station.name}</Text>
-          <Text style={tw`flex-2 text-sm text-center ${textColor}`}>{station.value.toFixed(1)}</Text>
-          <Text
-            style={tw`flex-2 text-sm text-center ${station.isHeavyRain ? 'text-red-500' : 'text-green-600'}`}
-          >
-                    {station.isHeavyRain ? 'Heavy' : 'Normal'}
+                <View
+                  key={station.id}
+                  style={tw`flex-row justify-between py-1 border-b border-gray-100`}
+                >
+                  <Text style={tw`flex-3 text-sm ${textColor}`}>
+                    {station.name}
+                  </Text>
+                  <Text style={tw`flex-2 text-sm text-center ${textColor}`}>
+                    {station.value.toFixed(1)}
+                  </Text>
+                  <Text
+                    style={tw`flex-2 text-sm text-center ${
+                      station.isHeavyRain ? "text-red-500" : "text-green-600"
+                    }`}
+                  >
+                    {station.isHeavyRain ? "Heavy" : "Normal"}
                   </Text>
                 </View>
               ))}
@@ -308,25 +570,24 @@ const AlertsScreen = ({ navigation }) => {
           )}
 
           <TouchableOpacity
-              style={tw`bg-orange-600 py-3 px-6 rounded items-center mt-4 mb-30`}
-            onPress={() => navigation.navigate('FlashFloods', { affectedAreas })}
+            style={tw`bg-orange-600 py-3 px-6 rounded items-center mt-4 mb-30`}
+            onPress={() =>
+              navigation.navigate("FlashFloods", { affectedAreas })
+            }
           >
-           <Text style={tw`text-white text-base font-bold`}>Flash Floods</Text>
+            <Text style={tw`text-white text-base font-bold`}>Flash Floods</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
-
   );
 };
 
 export default AlertsScreen;
 
 const styles = StyleSheet.create({
-
   map: {
-    width: Dimensions.get('window').width - 32,
+    width: Dimensions.get("window").width - 32,
     height: 300,
   },
-
 });

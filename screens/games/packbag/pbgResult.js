@@ -1,3 +1,5 @@
+//  --------------------- PACK BAG RESULT -----------------------
+
 import React, { useEffect, useState } from 'react';
 import { View, Text} from 'react-native';
 import { useRoute } from '@react-navigation/native';

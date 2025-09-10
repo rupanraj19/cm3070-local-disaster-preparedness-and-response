@@ -1,4 +1,4 @@
-import React from "react";
+// ----------- SETTINGS SCREEN --------------------
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -46,6 +46,7 @@ const SettingsScreen = ({ navigation }) => {
           <Ionicons name="arrow-back" size={24} color={isDark ? 'white' : 'black'} />
         </TouchableOpacity>
         <Text style={tw`text-lg font-semibold ${textColor} `}>Settings</Text>
+        <Text></Text>
       </View>
 
       <ScrollView style={tw`px-0`}>

@@ -1,3 +1,4 @@
+// ---------------------------- HOME SCREEN --------------------------
 import React, { useContext, useState, useRef, useEffect } from "react";
 import {
   View,
@@ -71,9 +72,9 @@ const HomeScreen = ({ navigation }) => {
 
       {/* instruction card  */}
       <View style={tw`${bgColor} rounded-2xl shadow-lg p-4 mb-8 ${borderColor} items-center`}>
-        <Text>The guides and games will be updated weekly :)</Text>
+        <Text>The guides and games will be updated weekly</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Splash')} // or your quiz screen name
+          onPress={() => navigation.navigate('Splash')} // or quiz screen name
           style={tw`bg-blue-600 px-4 py-2 rounded mt-2 w-40`}
         >
           <Text style={tw`text-white text-center font-bold`}>Take your daily quiz</Text>
@@ -121,12 +122,12 @@ const HomeScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={tw`bg-gray-100 rounded-xl overflow-hidden shadow-md mx-2 w-32`}
+              style={tw`bg-gray-100 rounded-xl overflow-hidden shadow-md mx-2 w-32 p-2`}
               onPress={() => navigation.navigate(item.screenName)}
             >
               <Image
                 source={item.image}
-                style={tw`w-[100%] h-20 rounded-t-xl px-2`}
+                style={tw`w-[85%] h-20 rounded-t-xl ml-2`}
                 resizeMode="cover"
               />
               <View style={tw`p-2`}>

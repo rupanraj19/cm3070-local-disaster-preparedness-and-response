@@ -1,176 +1,133 @@
 // --------------------REGISTER SCREEN---------------------------
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
+import { KeyboardAvoidingView, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { signOut } from "firebase/auth";
-import { doc, setDoc, getDoc, serverTimestamp} from 'firebase/firestore'
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import Checkbox from 'expo-checkbox';
+import tw from 'twrnc';
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [agree, setAgree] = useState(false);
 
-
-const handleSignUp = async () => {
-  if (!username || !email || !password) {
-    alert('Please fill all fields');
-    return;
-  }
-
-  try {
-    console.log('Checking username availability:', username);
-    const usernameDoc = await getDoc(doc(db, 'usernames', username.toLowerCase()));
-    if (usernameDoc.exists()) {
-      alert('Username already taken');
+  const handleSignUp = async () => {
+    if (!username || !email || !password) {
+      alert('Please fill all fields');
       return;
     }
 
-    console.log('Attempting to register user with email:', email);
-    const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredentials.user;
-    console.log('User registered:', user.uid);
+    if (!agree) {
+      alert('You must agree to the Terms & Conditions and Privacy Policy before registering.');
+      return;
+    }
 
-    console.log('Attempting to save user data to Firestore...');
-    await setDoc(doc(db, 'users', user.uid), {
-      username: username,
-      email: user.email,
-      createdAt: serverTimestamp(),
-      isNewUser: true,
-    });
-    await setDoc(doc(db, 'usernames', username.toLowerCase()), {
-      uid: user.uid,
-      email: user.email,
-    });
-    console.log('User data saved to Firestore');
+    try {
+      const usernameDoc = await getDoc(doc(db, 'usernames', username.toLowerCase()));
+      if (usernameDoc.exists()) {
+        alert('Username already taken');
+        return;
+      }
 
-    alert('Registered successfully!');
-    await auth.signOut();
-    navigation.navigate('Login');
-  } catch (error) {
-    console.error('Registration error:', error.code, error.message);
-    alert(`Error: ${error.code} - ${error.message}`);
-  }
-};
+      const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredentials.user;
+
+      await setDoc(doc(db, 'users', user.uid), {
+        username: username,
+        email: user.email,
+        createdAt: serverTimestamp(),
+        isNewUser: true,
+        agreedToTerms: true, // store consent
+      });
+
+      await setDoc(doc(db, 'usernames', username.toLowerCase()), {
+        uid: user.uid,
+        email: user.email,
+      });
+
+      alert('Registered successfully!');
+      await auth.signOut();
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Registration error:', error.code, error.message);
+      alert(`Error: ${error.code} - ${error.message}`);
+    }
+  };
 
   return (
+    <ImageBackground source={require('../assets/bg.png')} resizeMode="cover" style={tw`flex-1 w-full h-full justify-center`}>
+      <KeyboardAvoidingView style={tw`flex-1 items-center justify-center mb-20`} behavior="padding">
 
-    <ImageBackground source={require('../assets/bg.png')} resizeMode="cover" style={styles.image} >
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <Text style={tw`text-3xl font-bold mb-3`}>REGISTER</Text>
 
-      <View>
-          <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 10 }}>REGISTER</Text>
-      </View>
+        <View style={tw`w-4/5`}>
+          <TextInput
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            style={tw`bg-white px-4 py-3 rounded-lg border mt-2`}
+          />
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            style={tw`bg-white px-4 py-3 rounded-lg border mt-2`}
+          />
+          <TextInput
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            style={tw`bg-white px-4 py-3 rounded-lg border mt-2`}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          style={styles.input}
-        />
-      </View>
+        {/* --- Terms Checkbox --- */}
+        <View style={tw`flex-row items-center mt-4 w-4/5 flex-wrap`}>
+          <Checkbox
+            value={agree}
+            onValueChange={setAgree}
+            color={agree ? '#0782f9' : undefined}
+            style={tw`w-5 h-5`}
+          />
+          <Text style={tw`text-sm text-gray-700 ml-2 flex-1`}>
+            I agree to the{' '}
+            <Text style={tw`text-blue-500 underline font-bold`} onPress={() => navigation.navigate('Terms')}>
+              Terms & Conditions
+            </Text>{' '}
+            and{' '}
+            <Text style={tw`text-blue-500 underline font-bold`} onPress={() => navigation.navigate('Policy')}>
+              Privacy Policy
+            </Text>
+          </Text>
+        </View>
 
-      <View style={styles.btnContainer}>
-        <TouchableOpacity onPress={handleSignUp} style={styles.btn}>
-          <Text style={styles.btnText}>Register</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={tw`w-3/5 items-center mt-8`}>
+          <TouchableOpacity
+            onPress={handleSignUp}
+            style={tw`${agree ? 'bg-blue-500' : 'bg-gray-400'} w-full py-4 rounded-lg items-center`}
+            disabled={!agree}
+          >
+            <Text style={tw`text-white font-bold text-base`}>Register</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={{marginTop: 20,}}>
-         <Text style={styles.text}>
-        Already have an account?{' '}
-        <Text
-          style={styles.linkText}
-          onPress={() => navigation.navigate('Login')}
-        >
-          Login
-        </Text>
-      </Text>
-      </View>
-    </KeyboardAvoidingView>
+        <View style={tw`mt-5`}>
+          <Text style={tw`text-lg text-gray-800`}>
+            Already have an account?{' '}
+            <Text
+              style={tw`text-blue-500 underline font-bold`}
+              onPress={() => navigation.navigate('Login')}
+            >
+              Login
+            </Text>
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
 
 export default RegisterScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 80
-    },
-    inputContainer:{
-          width: '80%',
-    },
-    input:{
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius:10,
-        marginTop: 5,
-        borderWidth: 1,
-        marginVertical: 4,
-    },
-    btnContainer:{
-        width: '60%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 30,
-    },
-    btn: {
-        backgroundColor: '#0782f9',
-        width: '100%',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: "center",
-
-    },
-    btnOutline: {
-        backgroundColor: 'white',
-        marginTop: 5,
-        borderColor: '#0782f9',
-        borderWidth: 2,
-    },
-    btnText:{
-        color: 'white',
-        fontWeight: 700,
-        fontSize: 16,
-
-    },
-    btnOutlineText: {
-        color: '#0782f9',
-        fontWeight: 700,
-        fontSize: 16,
-    },
-    image: {
-      flex: 1,
-      justifyContent: "center",
-      width: '100%',
-      height: '100%',
-    },
-    text: {
-    fontSize: 18,
-    color: '#333',
-    },
-    linkText: {
-      color: '#0782f9',
-      textDecorationLine: 'underline',
-      fontWeight: 'bold',
-    },
-  })

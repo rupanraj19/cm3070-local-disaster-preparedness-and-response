@@ -1,3 +1,4 @@
+// ------------------ FEEDBACK SCREEN -------------------------
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
@@ -51,7 +52,7 @@ const FeedbackScreen = () => {
     }
   };
   return (
-<ScrollView contentContainerStyle={tw`flex-1 p-4 ${bgColor}`}>
+    <ScrollView contentContainerStyle={tw`flex-1 p-4 ${bgColor}`}>
       <Text style={tw`text-2xl font-bold mt-15 mb-4 self-center ${textColor}`}>Send us a message</Text>
 
       <Text style={tw`mt-3 mb-1 text-base font-semibold ${textColor}`}>Name</Text>

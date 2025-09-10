@@ -1,3 +1,5 @@
+// ----------------------- PACK BAG GAME --------------------------
+
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import tw from 'twrnc';
@@ -58,7 +60,6 @@ const updateLeaderboard = async (username, points) => {
       name: username,
       points: points,
     });
-    console.log("Leaderboard updated");
   } catch (err) {
     console.error("Failed to update leaderboard", err);
   }
@@ -104,7 +105,6 @@ const handleSubmit = async () => {
 
       // Update user
       await updateDoc(userRef, updates);
-      console.log(`${totalScore} points added`);
 
       // Get username + updated total points
       const userSnap = await getDoc(userRef);
@@ -177,7 +177,7 @@ const handleSubmit = async () => {
               `absolute w-16 h-16`,
               {
                 bottom: 180, // near the bag image
-                left: '50%', // tweak as needed
+                left: '50%',
                 zIndex: 50,
               }
             )}

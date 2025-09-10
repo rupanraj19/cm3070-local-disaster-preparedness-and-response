@@ -1,4 +1,5 @@
-// -----------------MAIN STACK-------------------------
+// -----------------MAINSTACK-------------------------
+
 import React, { useEffect, useState, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthStack from '../navigation/AuthStack'; // Stack for unauthenticated users
@@ -17,9 +18,7 @@ export default function MainStack() {
   const { setUserData } = useContext(UserContext); // ✅ Access context setter
 
   useEffect(() => {
-    console.log('Setting up onAuthStateChanged listener');
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log('Auth state changed:', user ? { uid: user.uid, email: user.email } : 'No user');
 
       if (user) {
         try {
@@ -60,7 +59,6 @@ export default function MainStack() {
             setUserData({ name, streak: newStreak });
 
             if (userData.isNewUser) {
-              console.log('New user detected, updating isNewUser and staying in AuthStack');
               await updateDoc(userRef, { isNewUser: false });
               setIsNewUser(false);
               setUser(user);
@@ -69,7 +67,6 @@ export default function MainStack() {
               setUser(user);
             }
           } else {
-            console.log('No user document found, defaulting to Tabs');
             setIsNewUser(false);
             setUser(user);
           }
@@ -79,7 +76,6 @@ export default function MainStack() {
           setUser(user);
         }
       } else {
-        console.log('No authenticated user, rendering AuthStack');
         setIsNewUser(false);
         setUser(null);
       }
@@ -88,14 +84,12 @@ export default function MainStack() {
     });
 
     return () => {
-      console.log('Cleaning up onAuthStateChanged listener');
       unsubscribe();
     };
   }, [setUserData]);
 
   if (loading) {
-    console.log('Showing loading state');
-    return null; // Replace with splash screen if needed
+    return null;
   }
 
   return (
@@ -103,12 +97,10 @@ export default function MainStack() {
       {user && !isNewUser ? (
         <>
           <Tabs />
-          {console.log('Rendering Tabs')}
         </>
       ) : (
         <>
           <AuthStack />
-          {console.log('Rendering AuthStack')}
         </>
       )}
     </NavigationContainer>

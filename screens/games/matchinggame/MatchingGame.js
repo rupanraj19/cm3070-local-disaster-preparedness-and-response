@@ -1,3 +1,5 @@
+//  --------------------- MATCHING GAME -----------------------
+
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Image } from 'react-native';
@@ -39,7 +41,7 @@ const awardBadgeIfNeeded = async (score) => {
     points: increment(score), // increment points by the score earned
   };
 
-  // Add badge on full score (customize badge name to your categoryKey)
+  // Add badge on full score (customize badge name to categoryKey)
   if (score === 100) {
     updates.badges = arrayUnion(`${categoryKey}`);
   }
@@ -47,7 +49,6 @@ const awardBadgeIfNeeded = async (score) => {
    try {
     // Update the user points and badges first
     await updateDoc(userRef, updates);
-    console.log(`${score} points added`);
 
     // Fetch updated user document
     const userSnap = await getDoc(userRef);
@@ -76,11 +77,10 @@ const updateLeaderboard = async (username, earnedPoints) => {
       doc(db, "leaderboard", user.uid),
       {
         name: username,
-        points: increment(earnedPoints) // ✅ Increment instead of replace
+        points: increment(earnedPoints) // Increment instead of replace
       },
-      { merge: true } // ✅ Keep existing fields
+      { merge: true } // Keep existing fields
     );
-    console.log("Leaderboard updated");
   } catch (err) {
     console.error("Failed to update leaderboard", err);
   }

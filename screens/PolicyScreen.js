@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import React from 'react';
+// ------------------------- POLICY SCREEN -----------------------
+import { Text, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import { useTheme } from '../context/ThemeContext';
 
@@ -44,4 +44,3 @@ const PolicyScreen = () => {
 
 export default PolicyScreen;
 
-const styles = StyleSheet.create({});

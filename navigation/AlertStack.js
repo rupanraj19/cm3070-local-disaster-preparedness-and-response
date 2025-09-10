@@ -1,4 +1,5 @@
-// AlertStack.js
+//------------------------ ALERTSTACK -----------------------------
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AlertScreen from '../screens/AlertScreen';
 import FlashFloodsScreen from '../screens/FlashFloodsScreen';

@@ -1,3 +1,4 @@
+// ------------------------- FLASH FLOOD SCREEN -----------------------------
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, ScrollView, Dimensions } from 'react-native';
 import MapView,  { Polygon, Marker } from 'react-native-maps';
