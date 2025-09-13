@@ -68,7 +68,7 @@ async function scheduleWeeklyTip() {
   });
 }
 
-// Cancel all scheduled notifications (can be improved for targeting specific ones)
+// Cancel all scheduled notifications
 async function cancelAllNotifications() {
   await Notifications.cancelAllScheduledNotificationsAsync();
 }
