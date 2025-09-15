@@ -8,7 +8,9 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { format } from 'date-fns';
+
 import { UserContext } from '../context/UserContext'; // Import UserContext
+
 
 export default function MainStack() {
   const [user, setUser] = useState(null);
@@ -54,8 +56,8 @@ export default function MainStack() {
               streak: newStreak,
               highestStreak: newHighestStreak
             });
-
-            // Set context data for global use
+            
+            //  Set context data for global use
             setUserData({ name, streak: newStreak });
 
             if (userData.isNewUser) {
