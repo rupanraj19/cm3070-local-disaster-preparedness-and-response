@@ -55,7 +55,7 @@ export default function MainStack() {
               highestStreak: newHighestStreak
             });
 
-            //  Set context data for global use
+            // ✅ Set context data for global use
             setUserData({ name, streak: newStreak });
 
             if (userData.isNewUser) {
