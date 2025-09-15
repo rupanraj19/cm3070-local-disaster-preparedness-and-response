@@ -11,6 +11,8 @@ import {
   SafeAreaView,
   Switch,
   Dimensions,
+  Platform,
+  StatusBar
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -414,7 +416,10 @@ const AlertsScreen = ({ navigation }) => {
   }, [location, showStations, rainStations]);
 
   return (
-    <SafeAreaView style={tw`${bgColor}`}>
+    <SafeAreaView   style={[
+    tw`flex-1 ${bgColor}`,
+    { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+  ]}>
       <Text
         style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}
       >

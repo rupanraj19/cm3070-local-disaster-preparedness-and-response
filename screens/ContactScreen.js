@@ -1,5 +1,5 @@
 // --------------CONTACT SCREEN--------------------
-import {View, Text,TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
+import {View, Text,TouchableOpacity, ScrollView, SafeAreaView, Platform, StatusBar} from 'react-native';
 import {Table, Row} from 'react-native-table-component'
 import tw from 'twrnc'
 import { useTheme } from '../context/ThemeContext';
@@ -18,7 +18,10 @@ const ContactScreen = ({ navigation }) => {
   const { bgColor, textColor, borderColor } = useTheme();
 
   return (
-    <SafeAreaView style={tw`${bgColor}`}>
+    <SafeAreaView   style={[
+    tw`flex-1 ${bgColor}`,
+    { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+  ]}>
       <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Contact</Text>
       <ScrollView style={tw`pb-25`}>
         <View>

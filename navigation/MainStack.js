@@ -8,14 +8,14 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { UserContext } from '../context/UserContext'; // ✅ Import UserContext
+import { UserContext } from '../context/UserContext'; // Import UserContext
 
 export default function MainStack() {
   const [user, setUser] = useState(null);
   const [isNewUser, setIsNewUser] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { setUserData } = useContext(UserContext); // ✅ Access context setter
+  const { setUserData } = useContext(UserContext); // Access context setter
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -55,7 +55,7 @@ export default function MainStack() {
               highestStreak: newHighestStreak
             });
 
-            // ✅ Set context data for global use
+            // Set context data for global use
             setUserData({ name, streak: newStreak });
 
             if (userData.isNewUser) {

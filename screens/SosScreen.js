@@ -1,6 +1,6 @@
 // --------------- SOS SCREEN ----------------------------
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert, TouchableOpacity, Switch, SafeAreaView, ScrollView } from "react-native";
+import { View, Text, TextInput,Platform, StatusBar, Alert, TouchableOpacity, Switch, SafeAreaView, ScrollView } from "react-native";
 import * as Location from "expo-location";
 import * as SMS from "expo-sms";
 import { auth, db } from "../firebase";
@@ -136,7 +136,10 @@ const SosScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tw`${bgColor}`}>
+    <SafeAreaView   style={[
+    tw`flex-1 ${bgColor}`,
+    { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+  ]}>
       <ScrollView>
       <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Emergency SOS</Text>
 

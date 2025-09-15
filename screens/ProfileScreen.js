@@ -1,6 +1,6 @@
 // ------------------- PROFILE SCREEN --------------------------
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView,  StatusBar, Platform } from 'react-native';
 import { getFirestore, doc, collection, onSnapshot } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
@@ -82,7 +82,10 @@ const ProfileScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={tw`${bgColor}`}>
+    <SafeAreaView   style={[
+    tw`flex-1 ${bgColor}`,
+    { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+  ]}>
       <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Profile</Text>
       <ScrollView contentContainerStyle={tw`px-6 py-8 ${bgColor}`}>
       {/* Settings Button */}

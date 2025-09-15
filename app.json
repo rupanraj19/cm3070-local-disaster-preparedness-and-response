@@ -32,7 +32,8 @@
       "favicon": "./assets/images/cover.png"
     },
     "plugins": [
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-asset"
     ],
     "extra": {
       "eas": {
