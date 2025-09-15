@@ -50,8 +50,7 @@ Install Expo CLI (if not already installed):
   npm install -g expo-cli
 ```
 Note: This project uses Expo SDK 53. Make sure your Expo Go app supports SDK 53 to run the project.
-```
-```
+
 Run the project:
 ```bash
   npm start
