@@ -49,6 +49,8 @@ Install Expo CLI (if not already installed):
 ```bash
   npm install -g expo-cli
 ```
+Note: This project uses Expo SDK 53. Make sure your Expo Go app supports SDK 53 to run the project.
+
 Run the project:
 ```bash
   npm start
@@ -56,6 +58,6 @@ Run the project:
 ```
 Open the app on your device:
 
--Install the Expo Go app from the App Store (iOS) or Google Play Store (Android).
--Scan the QR code shown in the terminal or browser after running expo start.
--Enjoy exploring FloodSafe SG
+- Install the Expo Go app from the App Store (iOS) or Google Play Store (Android).
+- Scan the QR code shown in the terminal or browser after running expo start.
+- Enjoy exploring FloodSafe SG
