@@ -10,7 +10,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView
+  SafeAreaView,
+  StatusBar
 } from "react-native";
 import { UserContext } from "../context/UserContext";
 import { guides } from "../config/guides";
@@ -57,7 +58,10 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 ${bgColor}`}>
+    <SafeAreaView   style={[
+    tw`flex-1 ${bgColor}`,
+    { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+  ]}>
        <Text style={tw`text-2xl font-bold text-center border-b p-5 border-gray-300 ${bgColor} ${textColor}`}>Home</Text>
     <View style={tw`flex-1 ${bgColor}`}>
     <ScrollView contentContainerStyle={tw`px-6 py-8`}>
