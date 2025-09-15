@@ -28,7 +28,7 @@ Built with **React Native** and **Expo**, the app educates users through interac
 - [Firebase Authentication](https://firebase.google.com/docs/auth) & Firestore  
 - [Expo Notifications](https://docs.expo.dev/versions/latest/sdk/notifications/)  
 - [react-native-tableview-simple](https://github.com/Purii/react-native-tableview-simple) (iOS-style settings)  
-- [react-native-animatable](https://github.com/oblador/react-native-animatable)  
+- [react-native-animatable](https://github.com/oblador/react-native-animatable)  (animations)
 - [twrnc](https://github.com/jaredh159/tailwind-react-native-classnames) (Tailwind for RN)  
 - [Jest](https://jestjs.io/) (unit testing)
 
