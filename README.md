@@ -40,3 +40,22 @@ Clone the repository:
 ```bash
 git clone https://github.com/rupanraj19/cm3070-local-disaster-preparedness-and-response.git
 cd cm3070-local-disaster-preparedness-and-response
+```
+Install dependencies:
+```bash
+  npm install 
+```
+Install Expo CLI (if not already installed):
+```bash
+  npm install -g expo-cli
+```
+Run the project:
+```bash
+  npm start
+  expo start
+```
+Open the app on your device:
+
+-Install the Expo Go app from the App Store (iOS) or Google Play Store (Android).
+-Scan the QR code shown in the terminal or browser after running expo start.
+-Enjoy exploring FloodSafe SG
