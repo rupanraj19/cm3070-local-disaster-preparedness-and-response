@@ -67,4 +67,7 @@ Open the app on your device:
 
 ## 🎥 Demo
 
-<video src="demo/demo.mp4" controls width="600"></video>
+<p align="center">
+  ▶️ <a href="https://youtu.be/AahTfQ7z9Tw">Android Demo + Explanation</a> •  
+  ▶️ <a href="https://youtube.com/shorts/aDX5IwZW0s8?feature=share">iOS Demo</a>
+</p>
