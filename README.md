@@ -4,7 +4,7 @@ Built with **React Native** and **Expo**, the app educates users through interac
 
 ---
 
-  <img src="demo/ss.png" alt="FloodSafe SG app" width="600"/>
+  <img src="demo/ss.png" alt="FloodSafe SG app" width="600" align="center/"/>
 
 ## ✨ Features
 - 📖 **Disaster Guides** – Learn about floods, preparedness steps, and safety measures (available in English, Chinese, Malay, Tamil).  
