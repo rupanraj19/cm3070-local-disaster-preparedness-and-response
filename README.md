@@ -24,9 +24,9 @@ Built with **React Native** and **Expo**, the app educates users through interac
 ---
 
 ## 📦 Tech Stack
-- [React Native](https://reactnative.dev/) with [Expo](https://expo.dev/)  
-- [Firebase Authentication](https://firebase.google.com/docs/auth) & Firestore  
-- [Expo Notifications](https://docs.expo.dev/versions/latest/sdk/notifications/)  
+- [React Native](https://reactnative.dev/) with [Expo](https://expo.dev/)  (frontend) (SDK 53)
+- [Firebase Authentication](https://firebase.google.com/docs/auth) & Firestore (database)
+- [Expo Notifications](https://docs.expo.dev/versions/latest/sdk/notifications/)  (notifications)
 - [react-native-tableview-simple](https://github.com/Purii/react-native-tableview-simple) (iOS-style settings)  
 - [react-native-animatable](https://github.com/oblador/react-native-animatable)  (animations)
 - [twrnc](https://github.com/jaredh159/tailwind-react-native-classnames) (Tailwind for RN)  
@@ -61,3 +61,8 @@ Open the app on your device:
 - Install the Expo Go app from the App Store (iOS) or Google Play Store (Android).
 - Scan the QR code shown in the terminal or browser after running expo start.
 - Enjoy exploring FloodSafe SG
+
+
+## 🎥 Demo
+
+<video src="demo/demo.mp4" controls width="600"></video>
